@@ -14,7 +14,7 @@ import numpy as np
 app = Flask(__name__, template_folder='templates')
 
 # Load your dataset
-heart_df = pd.read_csv("framingham.csv")
+heart_df = pd.read_csv(r"C:\Users\komma\Desktop\heart\framingham.csv")
 heart_df.drop(['education'], axis=1, inplace=True)
 heart_df.dropna(axis=0, inplace=True)
 
