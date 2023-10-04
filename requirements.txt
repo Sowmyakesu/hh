@@ -123,3 +123,4 @@ webencodings==0.5.1
 websocket-client==1.6.3
 Werkzeug==3.0.0
 widgetsnbextension==4.0.9
+python>=3.9
