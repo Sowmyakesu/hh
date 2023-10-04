@@ -13,4 +13,3 @@ scipy
 seaborn
 statsmodels
 Werkzeug
-python>=3.9
