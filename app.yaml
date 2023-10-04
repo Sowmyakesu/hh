@@ -2,7 +2,9 @@ runtime: python38  # Use the Python 3.8 runtime
 
 instance_class: F2  # Set the instance class (adjust based on your needs)
 
-entrypoint: gunicorn -b :$PORT hh:app  # Specify the entrypoint to run your Flask app
+entrypoint: gunicorn -k gthread myapp:app
+
+# Specify the entrypoint to run your Flask app
 
 env_variables:
   # Add any environment variables your app requires
