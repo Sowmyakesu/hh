@@ -13,3 +13,4 @@ scipy
 seaborn
 statsmodels
 Werkzeug
+gunicorn
