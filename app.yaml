@@ -1,0 +1,28 @@
+runtime: python38  # Use the Python 3.8 runtime
+
+instance_class: F2  # Set the instance class (adjust based on your needs)
+
+entrypoint: gunicorn -b :$PORT hh:app  # Specify the entrypoint to run your Flask app
+
+env_variables:
+  # Add any environment variables your app requires
+  # For example, if you're using a secret key, you can set it here
+  #SECRET_KEY: "your_secret_key"
+
+handlers:
+- url: /static
+  static_dir: static
+
+- url: /.*
+  script: auto
+
+automatic_scaling:
+  target_cpu_utilization: 0.65  # Adjust based on your app's resource needs
+
+# Uncomment the following section if you want to use HTTPS
+# (requires configuring a custom domain and SSL certificate)
+# 
+# handlers:
+# - url: /.*
+#   script: auto
+# secure: always
