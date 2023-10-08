@@ -66,7 +66,47 @@
 		<div id="suggestions">	
 		</div>
 		<h1 class="text-center" style="color:whitesmoke;">Heart Disease Risk Assessment</h1>
-		<form method="POST">
+		<form method="POST" id="myForm">
+			   <script>
+   document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('myForm'); // Select the form by its id
+
+      form.addEventListener('submit', async function (event) {
+         event.preventDefault(); // Prevent the default form submission behavior
+
+         // Get the values of the input fields (age, sex, etc.)
+         const age = parseFloat(document.querySelector('input[name="age"]').value);
+         const sex = parseFloat(document.querySelector('input[name="sex"]').value);
+         const cigsPerDay = parseFloat(document.querySelector('input[name="cigsPerDay"]').value);
+         const totChol = parseFloat(document.querySelector('input[name="totChol"]').value);
+         const sysBP = parseFloat(document.querySelector('input[name="sysBP"]').value);
+         const glucose = parseFloat(document.querySelector('input[name="glucose"]').value);
+
+         // Create a NumPy array from user inputs
+         const user_data = [[age, sex, cigsPerDay, totChol, sysBP, glucose]];
+
+         // Use the trained model to predict heart disease risk
+         const heart_disease_prob = await predictRisk(user_data); // Implement your predictRisk function
+
+         // Determine risk level and provide suggestions
+         let riskLevel, suggestions;
+         if (heart_disease_prob < 0.2) {
+            riskLevel = "Low";
+            suggestions = ["Maintain a healthy lifestyle.", "Regularly monitor your health."];
+         } else if (0.2 <= heart_disease_prob < 0.6) {
+            riskLevel = "Moderate";
+            suggestions = ["Consult with a healthcare professional for personalized advice.", "Consider making lifestyle changes like diet and exercise."];
+         } else {
+            riskLevel = "High";
+            suggestions = ["Urgently consult with a healthcare professional.", "Follow medical advice and treatment."];
+         }
+
+         // Display the risk level and suggestions on the page
+         document.getElementById('suggestions').innerText = `Risk Level: ${riskLevel}\n\nSuggestions: ${suggestions.join("\n")}`;
+      });
+   });
+</script>
+
 			<table>
 				<h1 style="color:whitesmoke;"></h1>
 				<tr>
