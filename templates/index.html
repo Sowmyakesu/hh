@@ -2,29 +2,113 @@
 <html>
 <head>
     <title>Heart Disease Risk Assessment</title>
+	<style>
+		body {
+			background-color: #011529;
+			font-family: arial;
+		}
+		.container {
+			width: 1400px;
+			margin: 0 auto;			
+		}
+		.text-center {
+			text-align: center;
+		}
+		table {
+			margin: 0 auto;
+		}
+		th, td {
+			padding: 10px;			
+		}
+		p {
+			margin: 0;
+			padding: 0;			
+		}
+		.innerWrapper {
+			vertical-align: top;
+		}
+		input {
+			font-size: 16px;
+			width: 400px;
+			padding: 3px 10px;
+			margin: 4px 0;
+			height: 45px;
+			box-sizing: border-box;
+			border-radius: 10px;
+		}
+		textarea {
+			font-size: 16px;
+			width: 400px;
+			height: 400px;
+			padding: 10px 10px;
+			margin: 4px 0;			
+			box-sizing: border-box;
+			border-radius: 10px;
+		}
+		input[type=submit] {
+			background: #f38420;
+			width: 60%;
+			padding: 0px 20px;    
+			box-sizing: border-box;
+			text-align: center;
+			margin: 0 auto;
+			border-radius: 10px;
+			color: #ffffff;
+			font-size: 18px;
+		}
+	</style>
 </head>
 <body>
-    <h1>Heart Disease Risk Assessment</h1>
-    <form method="POST">
-        <label for="age">Age (in years): </label>
-        <input type="number" name="age" required><br>
-        
-        <label for="sex">Gender (0 for female, 1 for male): </label>
-        <input type="number" name="sex" required><br>
-        
-        <label for="cigsPerDay">Number of cigarettes per day: </label>
-        <input type="number" name="cigsPerDay" required><br>
-        
-        <label for="totChol">Total Cholesterol (mg/dL): </label>
-        <input type="number" name="totChol" required><br>
-        
-        <label for="sysBP">Systolic Blood Pressure (mm Hg): </label>
-        <input type="number" name="sysBP" required><br>
-        
-        <label for="glucose">Glucose Level (mg/dL): </label>
-        <input type="number" name="glucose" required><br>
-        
-        <input type="submit" value="Submit">
-    </form>
+	<div class="container">
+		<div class="text-center">
+			<img src="https://www.cloudvative.com/img/logo-white.png" alt="https://www.cloudvative.com" class="text-center" width="220" />
+		</div>
+		<h1 class="text-center" style="color:whitesmoke;">Heart Disease Risk Assessment</h1>
+		<form method="POST">
+			<table>
+				<h1 style="color:whitesmoke;"></h1>
+				<tr>
+				  <td class="innerWrapper">				  
+					<table>
+						<tr>
+						  <td><label style="color:whitesmoke;"for="age">Age (in years): </label></td>
+						  <td><input type="number" name="age" required><br></td>
+						</tr>
+						<tr>
+							<td><label style="color:whitesmoke;"for="sex">Gender (0 for female, 1 for male): </label></td>
+							<td><input type="number" name="sex" required><br></td>
+						</tr>
+						<tr>
+							<td> <label style="color:whitesmoke;"for="cigsPerDay">Number of cigarettes per day: </label></td>
+							<td><input type="number" name="cigsPerDay" required><br></td>
+						</tr>
+						<tr>
+							<td> <label style="color:whitesmoke;"for="totChol">Total Cholesterol (mg/dL): </label></td>
+							<td><input type="number" name="totChol" required><br></td>
+						</tr>
+						<tr>
+							<td> <label style="color:whitesmoke;"for="sysBP">Systolic Blood Pressure (mm Hg): </label></td>
+							<td><input type="number" name="sysBP" required><br></td>
+						</tr>
+						<tr>
+							<td><label style="color:whitesmoke;"for="glucose">Glucose Level (mg/dL): </label></td>
+							<td><input type="number" name="glucose" required><br></td>
+						</tr>						
+					 </table>
+				  </td>
+				  <td class="innerWrapper">				  
+					<table>
+						<tr>
+							<td colspan="2"><p><label style="color:whitesmoke;"for="result">Suggestions: </label></p><textarea name="Suggestions" rows="4" cols="50"></textarea></td>
+						</tr>
+					 </table>
+				  </td>
+				</tr>
+				<tr>
+					<td colspan="2"><input type="submit" value="Submit"></td>
+				<tr>
+			  </table>
+		</form>
+	</div>
 </body>
 </html>
