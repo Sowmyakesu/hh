@@ -5,7 +5,7 @@ instance_class: F2  # Set the instance class (adjust based on your needs)
 entrypoint: gunicorn -k gthread app:app
 
 env_variables:
-  OPENAI_API_KEY: "- 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"  # Replace with your actual API key
+  OPENAI_API_KEY: "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"  # Replace with your actual API key
   
 handlers:
 - url: /static
