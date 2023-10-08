@@ -49,6 +49,9 @@ def get_suggestions():
     # Get user input from the form
     user_input = request.form['user_input']
 
+    # Debug: Print user input
+    print("User Input:", user_input)
+
     # Make an API request to ChatGPT
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
@@ -58,11 +61,15 @@ def get_suggestions():
         ]
     )
 
+    # Debug: Print API response
+    print("API Response:", response)
+
     # Extract the assistant's reply
     suggestion = response['choices'][0]['message']['content']
 
     # Return the suggestion as JSON
     return jsonify({'suggestion': suggestion})
+
 
 # Define a route to handle form submission using POST
 @app.route('/', methods=['POST'])
