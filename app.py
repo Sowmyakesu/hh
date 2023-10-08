@@ -7,7 +7,8 @@
 # Import necessary libraries
 import os
 import pandas as pd
-from flask import Flask, render_template, request
+import openai
+from flask import Flask, render_template, request, jsonify  # Import necessary Flask modules
 from sklearn.linear_model import LogisticRegression
 import numpy as np
 
@@ -38,37 +39,30 @@ def get_index():
     return render_template('index.html')
 
 import requests
+# Set your API key as an environment variable
+import os
+os.environ["OPENAI_API_KEY"] = "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"
 
-def get_suggestions(input_text):
-    api_key = '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'
-    endpoint = 'https://api.openai.com/v1/engines/davinci-codex/completions'
-
-    headers = {
-        'Authorization': f'Bearer {api_key}',
-        'Content-Type': 'application/json',
-    }
-
-    data = {
-        'prompt': input_text,
-        'max_tokens': 50,  # Adjust based on your needs
-    }
-
-    response = requests.post(endpoint, headers=headers, json=data)
-
-    if response.status_code == 200:
-        result = response.json()
-        suggestions = result['choices'][0]['text']
-        return suggestions
-    else:
-        # Handle API error
-        return 'Error fetching suggestions'
-
-# Usage example in your Flask route
+# Define a route to handle API requests
 @app.route('/get_suggestions', methods=['POST'])
-def get_suggestions_route():
+def get_suggestions():
+    # Get user input from the form
     user_input = request.form['user_input']
-    suggestions = get_suggestions(user_input)
-    return suggestions
+
+    # Make an API request to ChatGPT
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant that provides suggestions."},
+            {"role": "user", "content": user_input}
+        ]
+    )
+
+    # Extract the assistant's reply
+    suggestion = response['choices'][0]['message']['content']
+
+    # Return the suggestion as JSON
+    return jsonify({'suggestion': suggestion})
 
 # Define a route to handle form submission using POST
 @app.route('/', methods=['POST'])
