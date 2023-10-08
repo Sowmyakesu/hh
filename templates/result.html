@@ -17,46 +17,52 @@
     
     <script>
         // Function to send a request to ChatGPT API
-        async function getSuggestions(riskLevel) {
-            const apiKey = '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'; // Replace with your API key
-            const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions'; // API endpoint
+        // Function to send a request to ChatGPT API
+async function getSuggestions(riskLevel) {
+    const apiKey = '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'; // Replace with your API key
+    const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions'; // API endpoint
 
-            // Define the prompt based on the risk level
-            let prompt = '';
+    // Define the prompt based on the risk level
+    let prompt = '';
 
-            if (riskLevel === 'Low') {
-                prompt = 'I have a low risk of heart disease. What can I do to maintain a healthy lifestyle?';
-            } else if (riskLevel === 'Moderate') {
-                prompt = 'I have a moderate risk of heart disease. What lifestyle changes should I consider?';
-            } else if (riskLevel === 'High') {
-                prompt = 'I have a high risk of heart disease. What urgent steps should I take for my health?';
-            }
+    if (riskLevel === 'Low') {
+        prompt = 'I have a low risk of heart disease. What can I do to maintain a healthy lifestyle?';
+    } else if (riskLevel === 'Moderate') {
+        prompt = 'I have a moderate risk of heart disease. What lifestyle changes should I consider?';
+    } else if (riskLevel === 'High') {
+        prompt = 'I have a high risk of heart disease. What urgent steps should I take for my health?';
+    }
 
-            // Create the API request payload
-            const requestData = {
-                prompt: prompt,
-                max_tokens: 50, // Adjust the number of tokens as needed
-            };
+    // Create the API request payload
+    const requestData = {
+        prompt: prompt,
+        max_tokens: 50, // Adjust the number of tokens as needed
+    };
 
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`,
-                    },
-                    body: JSON.stringify(requestData),
-                });
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify(requestData),
+        });
 
-                const data = await response.json();
-                const suggestions = data.choices[0].text;
+        const data = await response.json();
 
-                // Display the suggestions on the page
-                document.getElementById('suggestions').innerHTML = suggestions;
-            } catch (error) {
-                console.error('Error fetching suggestions:', error);
-            }
-        }
+        // Debug: Log the entire API response
+        console.log('API Response Data:', data);
+
+        const suggestions = data.choices[0].text;
+
+        // Display the suggestions on the page
+        document.getElementById('suggestions').innerHTML = suggestions;
+    } catch (error) {
+        console.error('Error fetching suggestions:', error);
+    }
+}
+
 
         // Call the getSuggestions function with the risk level from Flask
         const riskLevel = '{{ risk_level }}'; // Replace with Flask variable
