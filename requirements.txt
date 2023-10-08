@@ -1,5 +1,6 @@
 Flask
 pandas
+requests
 scikit-learn
 numpy
 ipython
