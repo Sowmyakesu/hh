@@ -172,7 +172,15 @@
          console.log('Suggestions:', suggestions);
 
          // Display the risk level and suggestions on the page
-         document.getElementById('suggestionsResult').innerText = `Risk Level: ${riskLevel}\n\nSuggestions: ${suggestions.join("\n")}`;
+             const suggestionsResult = document.getElementById('suggestionsResult');
+             suggestionsResult.innerHTML = `
+               <p>Risk Level: ${riskLevel}</p>
+               <p>Suggestions:</p>
+               <ul>
+                 ${suggestions.map(suggestion => `<li>${suggestion}</li>`).join('')}
+               </ul>
+`             ;
+
       });
    });
 </script>
