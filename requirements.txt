@@ -1,4 +1,6 @@
 Flask
+jsonify
+openai
 pandas
 requests
 scikit-learn
