@@ -1,3 +1,5 @@
+openai
+jsonify
 Flask
 jsonify
 openai
