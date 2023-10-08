@@ -115,12 +115,20 @@
 			  </table>
 		</form>
 	</div>
-	  <script>
+	 <script>
+   // Define a simple predictRisk function (replace this with your actual prediction code)
+   async function predictRisk(user_data) {
+       // Simulate a prediction by returning a random probability between 0 and 1
+       return Math.random();
+   }
+
    document.addEventListener('DOMContentLoaded', function () {
       const form = document.getElementById('myForm'); // Select the form by its id
 
       form.addEventListener('submit', async function (event) {
          event.preventDefault(); // Prevent the default form submission behavior
+
+         console.log('Form submitted'); // Add this line for debugging
 
          // Get the values of the input fields (age, sex, etc.)
          const age = parseFloat(document.querySelector('input[name="age"]').value);
@@ -130,11 +138,22 @@
          const sysBP = parseFloat(document.querySelector('input[name="sysBP"]').value);
          const glucose = parseFloat(document.querySelector('input[name="glucose"]').value);
 
+         console.log('Age:', age); // Add these lines for debugging
+         console.log('Sex:', sex);
+         console.log('Cigarettes Per Day:', cigsPerDay);
+         console.log('Total Cholesterol:', totChol);
+         console.log('Systolic Blood Pressure:', sysBP);
+         console.log('Glucose Level:', glucose);
+
          // Create a NumPy array from user inputs
          const user_data = [[age, sex, cigsPerDay, totChol, sysBP, glucose]];
 
-         // Use the trained model to predict heart disease risk
-         const heart_disease_prob = await predictRisk(user_data); // Implement your predictRisk function
+         console.log('User Data:', user_data); // Add this line for debugging
+
+         // Use the predictRisk function to predict heart disease risk
+         const heart_disease_prob = await predictRisk(user_data);
+
+         console.log('Heart Disease Probability:', heart_disease_prob); // Add this line for debugging
 
          // Determine risk level and provide suggestions
          let riskLevel, suggestions;
@@ -149,11 +168,15 @@
             suggestions = ["Urgently consult with a healthcare professional.", "Follow medical advice and treatment."];
          }
 
+         console.log('Risk Level:', riskLevel); // Add these lines for debugging
+         console.log('Suggestions:', suggestions);
+
          // Display the risk level and suggestions on the page
          document.getElementById('suggestions').innerText = `Risk Level: ${riskLevel}\n\nSuggestions: ${suggestions.join("\n")}`;
       });
    });
 </script>
+
 
 </body>
 </html>
