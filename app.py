@@ -13,17 +13,6 @@ import numpy as np
 
 # Create a Flask web application
 app = Flask(__name__, template_folder='templates')
-import os
-
-# Access the API key from the environment variable
-import os
-
-# Access the API key from the environment variable
-api_key = os.environ.get('OPENAI_API_KEY', '')  # Set default value to an empty string
-
-# Check if the API key is set
-if not api_key:
-    raise ValueError("API key not found in environment variable OPENAI_API_KEY")
 
 
 # Get the current directory of the script
