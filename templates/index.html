@@ -64,7 +64,7 @@
 		<div class="text-center">
 			<img src="https://www.cloudvative.com/img/logo-white.png" alt="https://www.cloudvative.com" class="text-center" width="220" />
 		</div>
-		<div id="suggestions">	
+		<div id="suggestionsResult">	
 		</div>
 		<h1 class="text-center" style="color:whitesmoke;">Heart Disease Risk Assessment</h1>
 		<form method="POST" id="myForm">
@@ -172,7 +172,7 @@
          console.log('Suggestions:', suggestions);
 
          // Display the risk level and suggestions on the page
-         document.getElementById('suggestions').innerText = `Risk Level: ${riskLevel}\n\nSuggestions: ${suggestions.join("\n")}`;
+         document.getElementById('suggestionsResult').innerText = `Risk Level: ${riskLevel}\n\nSuggestions: ${suggestions.join("\n")}`;
       });
    });
 </script>
