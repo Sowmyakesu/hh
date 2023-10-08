@@ -103,5 +103,6 @@ def post_index():
     return render_template('result.html', risk_level=risk_level, heart_disease_prob=heart_disease_prob[0], suggestions=suggestions)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=8080)
+
 
