@@ -40,7 +40,7 @@ def get_index():
 import requests
 
 def get_suggestions(input_text):
-    api_key = '- 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'
+    api_key = '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'
     endpoint = 'https://api.openai.com/v1/engines/davinci-codex/completions'
 
     headers = {
