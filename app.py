@@ -13,6 +13,10 @@ import numpy as np
 
 # Create a Flask web application
 app = Flask(__name__, template_folder='templates')
+import os
+
+# Access the API key from the environment variable
+api_key = os.environ.get('OPENAI_API_KEY', '- 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')
 
 # Get the current directory of the script
 current_dir = os.path.dirname(os.path.abspath(__file__))
