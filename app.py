@@ -31,10 +31,44 @@ y = new_features.iloc[:, -1]
 logreg = LogisticRegression(solver='liblinear')
 logreg.fit(x, y)
 
+
 # Define a route to serve an HTML form for user input using GET
 @app.route('/', methods=['GET'])
 def get_index():
     return render_template('index.html')
+
+import requests
+
+def get_suggestions(input_text):
+    api_key = '- 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'
+    endpoint = 'https://api.openai.com/v1/engines/davinci-codex/completions'
+
+    headers = {
+        'Authorization': f'Bearer {api_key}',
+        'Content-Type': 'application/json',
+    }
+
+    data = {
+        'prompt': input_text,
+        'max_tokens': 50,  # Adjust based on your needs
+    }
+
+    response = requests.post(endpoint, headers=headers, json=data)
+
+    if response.status_code == 200:
+        result = response.json()
+        suggestions = result['choices'][0]['text']
+        return suggestions
+    else:
+        # Handle API error
+        return 'Error fetching suggestions'
+
+# Usage example in your Flask route
+@app.route('/get_suggestions', methods=['POST'])
+def get_suggestions_route():
+    user_input = request.form['user_input']
+    suggestions = get_suggestions(user_input)
+    return suggestions
 
 # Define a route to handle form submission using POST
 @app.route('/', methods=['POST'])
