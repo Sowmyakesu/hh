@@ -19,18 +19,18 @@
 
     <script>
         // Function to send a request to ChatGPT API
-        async function getSuggestions(riskLevel) {
+        async function getSuggestions(risk_level) {
             const apiKey = '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'; // Replace with your API key
             const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions'; // API endpoint
 
             // Define the prompt based on the risk level
             let prompt = '';
 
-            if (riskLevel === 'Low') {
+            if (risk_level === 'Low') {
                 prompt = 'I have a low risk of heart disease. What can I do to maintain a healthy lifestyle?';
-            } else if (riskLevel === 'Moderate') {
+            } else if (risk_level === 'Moderate') {
                 prompt = 'I have a moderate risk of heart disease. What lifestyle changes should I consider?';
-            } else if (riskLevel === 'High') {
+            } else if (risk_level === 'High') {
                 prompt = 'I have a high risk of heart disease. What urgent steps should I take for my health?';
             }
 
