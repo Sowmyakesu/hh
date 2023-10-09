@@ -102,7 +102,9 @@ def post_index():
         suggestions = ["Urgently consult with a healthcare professional.", "Follow medical advice and treatment."]
 
     # Render the "results.html" template with the appropriate variables
-    return render_template('result.html', risk_level=risk_level, heart_disease_prob=heart_disease_prob[0], suggestions=suggestions)
+    # Calculate the probability as a percentage
+    heart_disease_percentage = heart_disease_prob[0] * 100
+    return render_template('result.html', risk_level=risk_level, heart_disease_percentage=heart_disease_percentage, suggestions=suggestions)
 
 
 if __name__ == '__main__':
