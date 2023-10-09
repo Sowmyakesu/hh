@@ -103,7 +103,7 @@ def post_index():
 
     # Render the "results.html" template with the appropriate variables
     # Calculate the probability as a percentage
-    heart_disease_percentage = heart_disease_prob[0] * 100
+    heart_disease_percentage = round(heart_disease_prob[0] * 100, 2)
     return render_template('result.html', risk_level=risk_level, heart_disease_percentage=heart_disease_percentage, suggestions=suggestions)
 
 
