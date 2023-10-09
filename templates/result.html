@@ -21,7 +21,7 @@
         // Function to send a request to ChatGPT API
         async function getSuggestions(risk_level) {
             const apiKey = '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'; // Replace with your API key
-            const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions'; // API endpoint
+            const apiUrl = 'https://api.openai.com/v1/chat/completions'; // API endpoint
 
             // Define the prompt based on the risk level
             let prompt = '';
