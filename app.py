@@ -38,6 +38,8 @@ logreg.fit(x, y)
 def get_index():
     return render_template('index.html')
 
+
+
 import requests
 # Set your API key as an environment variable
 import os
@@ -71,7 +73,6 @@ def get_suggestions():
     return jsonify({'suggestion': suggestion})
 
 
-# Define a route to handle form submission using POST
 @app.route('/', methods=['POST'])
 def post_index():
     # Get user input from the form (similar to your existing POST route)
@@ -100,7 +101,9 @@ def post_index():
         risk_level = "High"
         suggestions = ["Urgently consult with a healthcare professional.", "Follow medical advice and treatment."]
 
-    return render_template('result.html', risk_level=risk_level, heart_disease_prob=heart_disease_prob[0], suggestions=suggestions)
+    # Render the "results.html" template with the appropriate variables
+    return render_template('results.html', risk_level=risk_level, heart_disease_prob=heart_disease_prob[0], suggestions=suggestions)
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
