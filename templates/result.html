@@ -2,18 +2,17 @@
 <html>
 <head>
     <title>Heart Disease Risk Assessment Result</title>
-	<style>
-		body {
-			background-color: #011529;
-			font-family: arial;
-		}
-		.container {
-			width: 1200px;
-			text-align: center;
-			margin: 0 auto;			
-		}		
-				
-	</style>
+    <style>
+        body {
+            background-color: #011529;
+            font-family: arial;
+        }
+        .container {
+            width: 1200px;
+            text-align: center;
+            margin: 0 auto;            
+        }       
+    </style>
 </head>
 <body>
     <div class="container">
@@ -24,13 +23,10 @@
             <!-- Suggestions will be inserted here using JavaScript -->
         </div>
         <h1 class="text-center" style="color:whitesmoke;">Heart Disease Risk Assessment Result</h1>
-
-        <!-- Add a textarea for suggestions -->
-
     </div>
 
     <script>
-        // Function to send a request to ChatGPT API
+        // Function to send a request to ChatGPT API and display suggestions
         async function getSuggestions(risk_level) {
             const apiKey = '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'; // Replace with your API key
             const apiUrl = 'https://api.openai.com/v1/chat/completions'; // API endpoint
@@ -74,9 +70,9 @@
 
                 formattedHTMLText = data.choices[0].message.content.replace(/\n/g,"<br>");
 
-                // Display the suggestions on the page
-                document.getElementById('suggestions').value = formattedHTMLText;
-				console.log(formattedHTMLText);
+                // Display the suggestions directly on the screen
+                document.getElementById('suggestionsResult').innerHTML = formattedHTMLText;
+                console.log(formattedHTMLText);
             } catch (error) {
                 console.error('Error fetching suggestions:', error);
             }
