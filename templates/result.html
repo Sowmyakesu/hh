@@ -36,9 +36,14 @@
 
             // Create the API request payload
             const requestData = {
-                prompt: prompt,
-                max_tokens: 50, // Adjust the number of tokens as needed
-            };
+                 model: "gpt-4",
+                 "messages": [
+                     {
+                         "role": "user",
+                         "content": prompt
+                     }
+                 ]
+             }
 
             try {
                 const response = await fetch(apiUrl, {
