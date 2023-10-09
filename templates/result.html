@@ -37,6 +37,10 @@
     
     <script>
         // Function to send a request to ChatGPT API and display suggestions
+        <div id="suggestionsResult">
+            <h2>Risk Level: {{ risk_level }}</h2>
+            <p>Probability of Heart Disease: {{ heart_disease_percentage }}%</p>
+        </div>
         async function getSuggestions(risk_level) {
             const apiKey = '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'; // Replace with your API key
             const apiUrl = 'https://api.openai.com/v1/chat/completions'; // API endpoint
