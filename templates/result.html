@@ -94,12 +94,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const probability = {{ heart_disease_percentage }};
-    
+        
         const scatterData = {
             datasets: [
                 {
                     label: 'Your Risk of Heart Disease',
-                    data: [{ x: 100, y: probability }],  // Assuming x as 100 for example, you can adjust it based on your need
+                    data: [{ x: 100, y: probability }],
                     borderColor: 'red',
                     backgroundColor: 'red',
                     pointRadius: 8,
@@ -107,31 +107,7 @@
                 }
             ]
         };
-    
-        const ctx = document.getElementById('myChart').getContext('2d');
-        const myScatterChart = new Chart(ctx, {
-            type: 'scatter',
-            data: scatterData,
-            options: {
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Age (or another relevant metric)'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Probability (%)'
-                        }
-                    }
-                }
-            }
-        });
-
+        
         const scatterConfig = {
             type: 'scatter',
             data: scatterData,
@@ -142,18 +118,21 @@
                         position: 'bottom',
                         title: {
                             display: true,
-                            text: 'Age'
+                            text: 'Age' // Replace with the appropriate label for the x-axis
                         }
                     },
                     y: {
                         title: {
                             display: true,
-                            text: 'Risk'
+                            text: 'Risk (%)' // Replace with the appropriate label for the y-axis
                         }
                     }
                 }
             }
         };
+    
+        const ctx = document.getElementById('scatterChart').getContext('2d');
+        new Chart(ctx, scatterConfig);
 
         new Chart(document.getElementById('scatterChart'), scatterConfig);
 
