@@ -91,8 +91,8 @@
 
     <div class="container">
         <div class="results">
-            <h3>Risk Level: <span id="riskLevel">Loading...</span></h3>
-            <h4>Probability: <span id="probabilityValue">Loading...</span>%</h4>
+            <h2>Risk Level: {{ risk_level }}</h2>
+            <p>Probability of Heart Disease: {{ heart_disease_percentage }}%</p>
             <canvas id="percentageGraph" width="500" height="300"></canvas>
         </div>
         <div class="suggestions">
@@ -104,71 +104,57 @@
 
     <script>
  function drawScatterPlot(age, percentage) {
-            const canvas = document.getElementById('percentageGraph');
-            const ctx = canvas.getContext('2d');
-            
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            const xScale = canvas.width / 100;
-            const yScale = canvas.height / 100;
+    const canvas = document.getElementById('percentageGraph');
+    const ctx = canvas.getContext('2d');
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    const xScale = canvas.width / 100;
+    const yScale = canvas.height / 100;
 
-            const xPosition = age * xScale;
-            const yPosition = canvas.height - (percentage * yScale);
-            
-            ctx.fillStyle = "#0099ff";
-            ctx.beginPath();
-            ctx.arc(xPosition, yPosition, 5, 0, 2 * Math.PI);
-            ctx.fill();
+    const xPosition = age * xScale;
+    const yPosition = canvas.height - (percentage * yScale);
+    
+    // Grid lines
+    ctx.strokeStyle = "#333";
+    ctx.lineWidth = 0.5;
+    for (let i = 1; i < 10; i++) {
+        ctx.beginPath();
+        ctx.moveTo(xScale * 10 * i, 0);
+        ctx.lineTo(xScale * 10 * i, canvas.height);
+        ctx.stroke();
 
-            // Axes
-            ctx.strokeStyle = "#000";
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(0, canvas.height);
-            ctx.lineTo(canvas.width, canvas.height);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.lineTo(0, canvas.height);
-            ctx.stroke();
-            ctx.font = "14px Arial";
-            ctx.fillStyle = "#000";
-            ctx.fillText("Age", canvas.width - 30, canvas.height - 5);
-            ctx.fillText("Probability", 5, 15);
-        }
+        ctx.beginPath();
+        ctx.moveTo(0, yScale * 10 * i);
+        ctx.lineTo(canvas.width, yScale * 10 * i);
+        ctx.stroke();
+    }
 
-        // Test values - These should be fetched dynamically in real-world scenario
-        const ageValue = 30;
-        const probabilityValue = 70; 
-        const riskLevelValue = 'Low';
+    // Plot point
+    ctx.fillStyle = "#E57373";  // A red shade
+    ctx.beginPath();
+    ctx.arc(xPosition, yPosition, 7, 0, 2 * Math.PI);  // Increased radius for better visibility
+    ctx.fill();
 
-        // Set the values in HTML
-        document.getElementById('riskLevel').textContent = riskLevelValue;
-        document.getElementById('probabilityValue').textContent = probabilityValue;
+    // Axes
+    ctx.strokeStyle = "#FFF";  // White color for better contrast
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height);
+    ctx.lineTo(canvas.width, canvas.height);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, canvas.height);
+    ctx.stroke();
 
-        // Draw the scatter plot
-        drawScatterPlot(ageValue, probabilityValue);
+    // Axis labels
+    ctx.font = "14px Arial";
+    ctx.fillStyle = "#FFF";  // White color for better contrast
+    ctx.fillText("Age", canvas.width - 40, canvas.height - 10);
+    ctx.fillText("Probability", 10, 20);
+}
 
-
-        const apiKey = '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';
-        const apiUrl = 'https://api.openai.com/v1/chat/completions';
-
-        function typeText(sentences, index, container) {
-            if (index < sentences.length) {
-                let sentence = sentences[index].trim();
-                let charIndex = 0;
-                let typing = setInterval(() => {
-                    if (charIndex < sentence.length) {
-                        container.value += sentence[charIndex];
-                        charIndex++;
-                    } else {
-                        clearInterval(typing);
-                        container.value += '.\n';
-                        typeText(sentences, index + 1, container);
-                    }
-                }, 50);
-            }
-        }
 
         async function getSuggestionsWithQA(risk_level) {
             const questions = [
