@@ -88,9 +88,12 @@
     <img src="https://www.cloudvative.com/img/logo-white.png" alt="Cloudvative Logo" width="220" class="logo" />
     <h1>Heart Disease Risk Assessment Result</h1>
 
+    
+
     <div class="container">
         <div class="results">
             <h3>Risk Level: {{ risk_level }}</h3>
+            <h4>Probability: {{ probability_value }}%</h4>
             <canvas id="percentageGraph" width="500" height="300"></canvas>
         </div>
         <div class="suggestions">
@@ -102,44 +105,45 @@
 
     <script>
         function drawScatterPlot(age, percentage) {
-            const canvas = document.getElementById('percentageGraph');
-            const ctx = canvas.getContext('2d');
-            
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            const xScale = canvas.width / 100;  // Assuming age up to 100
-            const yScale = canvas.height / 100; // Assuming percentage up to 100%
+    const canvas = document.getElementById('percentageGraph');
+    const ctx = canvas.getContext('2d');
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    const xScale = canvas.width / 100;  // Assuming age up to 100
+    const yScale = canvas.height / 100; // Assuming percentage up to 100%
 
-            const xPosition = age * xScale;
-            const yPosition = canvas.height - (percentage * yScale);
-            
-            ctx.fillStyle = "#0099ff";
-            ctx.beginPath();
-            ctx.arc(xPosition, yPosition, 5, 0, 2 * Math.PI);
-            ctx.fill();
+    const xPosition = age * xScale;
+    const yPosition = canvas.height - (percentage * yScale);
+    
+    ctx.fillStyle = "#0099ff";
+    ctx.beginPath();
+    ctx.arc(xPosition, yPosition, 5, 0, 2 * Math.PI);
+    ctx.fill();
 
-            // Drawing the axes
-            ctx.strokeStyle = "#000";
-            ctx.lineWidth = 2;
+    // Drawing the axes
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 2;
 
-            // X-axis
-            ctx.beginPath();
-            ctx.moveTo(0, canvas.height);
-            ctx.lineTo(canvas.width, canvas.height);
-            ctx.stroke();
+    // X-axis
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height);
+    ctx.lineTo(canvas.width, canvas.height);
+    ctx.stroke();
 
-            // Y-axis
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.lineTo(0, canvas.height);
-            ctx.stroke();
+    // Y-axis
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, canvas.height);
+    ctx.stroke();
 
-            // Labeling the axes
-            ctx.font = "14px Arial";
-            ctx.fillStyle = "#000";
-            ctx.fillText("Age", canvas.width - 30, canvas.height - 5);
-            ctx.fillText("Probability", 5, 15);
-        }
+    // Labeling the axes
+    ctx.font = "14px Arial";
+    ctx.fillStyle = "#000";
+    ctx.fillText("Age", canvas.width - 30, canvas.height - 5);
+    ctx.fillText("Probability", 5, 15);
+}
+
 
         const apiKey = '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';
         const apiUrl = 'https://api.openai.com/v1/chat/completions';
