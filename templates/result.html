@@ -80,6 +80,29 @@
         .logo {
             margin-bottom: 20px; /* Add space between logo and title */
         }
+
+        .legend {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .legend-item div {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            border-radius: 50%;
+        }
+
+        .legend-label {
+            font-size: 16px;
+        }
     </style>
 </head>
 
@@ -91,7 +114,21 @@
         <div class="results">
             <h3>Risk Level: {{ risk_level }}</h3>
             <p>Probability of Heart Disease: <span id="percentageValue">{{ heart_disease_percentage }}</span>%</p>
-            <canvas id="percentageGraph" width="300" height="150" style="background-color: #f0f0f0;"></canvas>
+            <canvas id="percentageGraph" width="500" height="300" style="background-color: #f0f0f0;"></canvas>
+            <div class="legend">
+                <div class="legend-item">
+                    <div style="background-color: red;"></div>
+                    <div class="legend-label">High Risk</div>
+                </div>
+                <div class="legend-item">
+                    <div style="background-color: yellow;"></div>
+                    <div class="legend-label">Moderate Risk</div>
+                </div>
+                <div class="legend-item">
+                    <div style="background-color: green;"></div>
+                    <div class="legend-label">Low Risk</div>
+                </div>
+            </div>
         </div>
         <div class="suggestions">
             <h2>Suggestions</h2>
