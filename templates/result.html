@@ -90,7 +90,7 @@
     <div class="container">
         <div class="results">
             <h3>Risk Level: {{ risk_level }}</h3>
-            <p>Probability of Heart Disease: <span id="percentageValue">{{ heart_disease_percentage }}</span>%</p>
+            <p>Probability of Heart Disease: 39.66%</p>
             <!-- Scatter Plot Canvas -->
             <canvas id="scatterChart" width="500" height="300"></canvas>
         </div>
@@ -138,11 +138,45 @@
                             text: 'Risk'
                         }
                     }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.dataset.label || '';
+                                if (context.parsed.x === 60) {
+                                    return label + 'Probability of Heart Disease: 39.66%';
+                                }
+                                return label;
+                            }
+                        }
+                    }
                 }
             }
         };
 
-        new Chart(document.getElementById('scatterChart'), scatterConfig);
+        const scatterChart = new Chart(document.getElementById('scatterChart'), scatterConfig);
+
+        // Add annotation for Probability of Heart Disease
+        scatterChart.options.plugins.annotation = {
+            annotations: {
+                heartDiseaseAnnotation: {
+                    type: 'line',
+                    mode: 'horizontal',
+                    scaleID: 'y',
+                    value: 39.66,
+                    borderColor: 'red',
+                    borderWidth: 2,
+                    label: {
+                        content: 'Probability of Heart Disease: 39.66%',
+                        enabled: true
+                    }
+                }
+            }
+        };
+
+        scatterChart.update();
+        
         const apiKey = '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';
         const apiUrl = 'https://api.openai.com/v1/chat/completions';
     
