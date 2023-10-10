@@ -194,21 +194,24 @@
         }
     
         function typeText(sentences, index, container) {
-            if (index < sentences.length) {
-                let sentence = sentences[index].trim();
-                let charIndex = 0;
-                let typing = setInterval(() => {
-                    if (charIndex < sentence.length) {
-                        container.value += sentence[charIndex];
-                        charIndex++;
-                    } else {
-                        clearInterval(typing);
-                        container.value += '.\n';
-                        typeText(sentences, index + 1, container);
-                    }
-                }, 50);
-            }
+    if (index >= sentences.length) {
+        return;  // Stop the function when all sentences have been typed out
+    }
+
+    let sentence = sentences[index].trim();
+    let charIndex = 0;
+    let typing = setInterval(() => {
+        if (charIndex < sentence.length) {
+            container.value += sentence[charIndex];
+            charIndex++;
+        } else {
+            clearInterval(typing);
+            container.value += '.\n';
+            typeText(sentences, index + 1, container);
         }
+    }, 50);
+}
+
     
         async function getSuggestionsWithQA(risk_level) {
             const questions = [
