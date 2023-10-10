@@ -104,27 +104,45 @@
     <script>
         // Sample data for the Scatter Plot (replace with your data)
         const ages = [10, 12, 15, 20, 30, 40, 50, 60, 65, 70, 75, 80, 85, 90, 95, 100];
-        const risks = [10, 12, 15, 20, 30, 40, 50, 60, 65, 70, 75, 80, 85, 90, 95];
-
+        const risks = [10, 12, 15, 20, 30, 40, 50, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+    
         // Get the probability value (replace with your actual value)
-        const probability = {{ heart_disease_percentage }}; // Replace with your actual probability value
-
+        const probability = {{ heart_disease_percentage }}; 
+    
         // Add the probability value to the risks array
         risks.push(probability);
-
+    
+        // Determine color based on risk
+        let riskColor;
+        if (probability <= 33) { // Assuming 0-33 is low, 34-66 is medium, and 67-100 is high.
+            riskColor = "green"; // Low Risk
+        } else if (probability <= 66) {
+            riskColor = "yellow"; // Medium Risk
+        } else {
+            riskColor = "red"; // High Risk
+        }
+    
         // Scatter Plot Data
         const scatterData = {
             labels: ages,
             datasets: [{
                 label: 'Heart Disease Risk',
-                data: risks,
+                data: risks.slice(0, -1),
                 borderColor: 'blue',
                 backgroundColor: 'blue',
                 pointRadius: 5,
                 pointHoverRadius: 8,
+            }, 
+            {
+                label: 'Your Risk',
+                data: [probability],
+                borderColor: riskColor,
+                backgroundColor: riskColor,
+                pointRadius: 8,
+                pointHoverRadius: 10,
             }]
         };
-
+    
         const scatterConfig = {
             type: 'scatter',
             data: scatterData,
@@ -147,8 +165,11 @@
                 }
             }
         };
-
+    
         new Chart(document.getElementById('scatterChart'), scatterConfig);
+        
+    </script>
+    
 
         const apiKey = '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';
         const apiUrl = 'https://api.openai.com/v1/chat/completions';
@@ -190,9 +211,9 @@
             const questions = [
                 "What are the common symptoms of heart disease?",
                 "How can I prevent heart disease?",
-                "Are there any foods that are particularly good for heart health?",
-                "How does exercise benefit the heart?",
-                "What are the risks associated with heart surgeries?"
+                // "Are there any foods that are particularly good for heart health?",
+                // "How does exercise benefit the heart?",
+                // "What are the risks associated with heart surgeries?"
             ];
     
             let promptBasedOnRisk = '';
@@ -270,7 +291,7 @@
             // Call the function to generate suggestions
             getSuggestionsWithQA('{{ risk_level }}');
         }, TIMER_SECONDS * 1000);
-        
+
     </script>    
     
 </body>
