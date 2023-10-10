@@ -197,66 +197,66 @@
     
             let promptBasedOnRisk = '';
             if (risk_level === 'Low') {
-                promptBasedOnRisk = 'I have a low risk of heart disease. What can I do to maintain a healthy lifestyle?';
+                promptBasedOnRisk = 'I have a low risk of heart disease. provide congrtualtions and What can I do to maintain a healthy lifestyle?';
             } else if (risk_level === 'Moderate') {
-                promptBasedOnRisk = 'I have a moderate risk of heart disease. What lifestyle changes should I consider?';
+                promptBasedOnRisk = 'I have a moderate risk of heart disease. provide concern and What lifestyle changes should I consider?';
             } else if (risk_level === 'High') {
-                promptBasedOnRisk = 'I have a high risk of heart disease. What urgent steps should I take for my health?';
+                promptBasedOnRisk = 'I have a high risk of heart disease. provide concern and What urgent steps should I take for my health?';
             }
     
             let allPrompts = [promptBasedOnRisk, ...questions];
-    
-            let combinedAnswers = '';
             
-            for (let i = 0; i < allPrompts.length; i++) {
+            const requestPromises = allPrompts.map(prompt => {
                 const requestData = {
                     model: "gpt-4",
                     "messages": [
                         {
                             "role": "user",
-                            "content": allPrompts[i]
+                            "content": prompt
                         }
                     ]
                 };
-    
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${apiKey}`,
-                        },
-                        body: JSON.stringify(requestData),
-                    });
-    
-                    const data = await response.json();
-                    const answer = data.choices[0].message.content;
+
+                return fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`,
+                    },
+                    body: JSON.stringify(requestData),
+                });
+            });
+
+            try {
+                const responses = await Promise.all(requestPromises);
+                const dataPromises = responses.map(response => response.json());
+                const data = await Promise.all(dataPromises);
+
+                let combinedAnswers = '';
+                for (let i = 0; i < data.length; i++) {
+                    const answer = data[i].choices[0].message.content;
                     if (i === 0) {
                         combinedAnswers += answer + '\n';
                     } else {
                         combinedAnswers += 'Q: ' + allPrompts[i] + '\nA: ' + answer + '\n';
                     }
-    
-                } catch (error) {
-                    console.error('Error fetching suggestions:', error);
                 }
+
+                let container = document.getElementById('suggestionsContent');
+                typeText(combinedAnswers.split('\n'), 0, container);
+
+            } catch (error) {
+                console.error('Error fetching suggestions:', error);
             }
-    
-            let container = document.getElementById('suggestionsContent');
-            typeText(combinedAnswers.split('\n'), 0, container);
         }
-    
-        const risk_level = 'Moderate'; // Replace with your risk level (ensure it's correctly set)
-        const percentage = 30.5; // Replace with your heart disease percentage (ensure it's correctly set)
-        drawGraph(percentage);
-    
-        const TIMER_SECONDS = 2;  // 2-second delay
+
+        const TIMER_SECONDS = 2;
         let countdown = TIMER_SECONDS;
         let timerElement = document.createElement('div');
         timerElement.className = 'timer';
         timerElement.innerHTML = `Suggestions in ${countdown}s`;
         document.querySelector('.suggestions').appendChild(timerElement);
-    
+
         let timer = setInterval(() => {
             countdown--;
             timerElement.innerHTML = `Suggestions in ${countdown}s`;
@@ -265,10 +265,12 @@
                 timerElement.remove();
             }
         }, 1000);
-    
+
         setTimeout(() => {
-            getSuggestionsWithQA(risk_level);
+            // Call the function to generate suggestions
+            getSuggestionsWithQA('{{ risk_level }}');
         }, TIMER_SECONDS * 1000);
+        
     </script>    
     
 </body>
