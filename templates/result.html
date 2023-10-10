@@ -5,80 +5,27 @@
     <title>Heart Disease Risk Assessment Result</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
             background-color: #011529;
+            font-family: Arial, sans-serif;
             color: whitesmoke;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            transition: background 0.5s;
         }
 
         .container {
             width: 70%;
-            padding: 20px;
-            background-color: #022b3a;
-            border-radius: 10px;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+            margin: 0 auto;
             text-align: center;
-        }
-
-        .container img {
-            width: 150px;
-            margin-bottom: 15px;
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        h2 {
-            font-size: 20px;
-            margin: 10px 0;
-        }
-
-        p {
-            font-size: 16px;
-            margin: 10px 0;
-        }
-
-        #loadingMessage {
-            color: orange;
-        }
-
-        textarea {
-            width: 100%;
-            height: 200px;
-            padding: 10px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f8f8f8;
-            margin: 15px 0;
-            resize: none;
-            font-size: 14px;
-            transition: border 0.3s;
-        }
-
-        textarea:focus {
-            border: 1px solid #0099ff;
-            outline: none;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <img src="https://www.cloudvative.com/img/logo-white.png" alt="Cloudvative Logo">
+        <img src="https://www.cloudvative.com/img/logo-white.png" alt="Cloudvative Logo" width="220" />
         <h1>Heart Disease Risk Assessment Result</h1>
         <h2>Risk Level: {{ risk_level }}</h2>
-        <p>Probability of Heart Disease: {{ heart_disease_percentage }}%</p>
-        <p id="loadingMessage">Generating suggestions...</p>
-        <textarea id="suggestionsContent" readonly></textarea>
+        <canvas id="percentageGraph" width="400" height="150" style="background-color: #f0f0f0;"></canvas>
+        <p>Probability of Heart Disease: <span id="percentageValue">{{ heart_disease_percentage }}</span>%</p>
+        <textarea id="suggestionsContent" readonly style="width:100%; height:200px;"></textarea>
     </div>
 
     <script>
@@ -119,8 +66,6 @@
                 const messageContent = data.choices[0].message.content;
                 const sentences = messageContent.split('. ');
 
-                document.getElementById('loadingMessage').style.display = 'none';
-
                 let container = document.getElementById('suggestionsContent');
                 for (let i = 0; i < sentences.length; i++) {
                     setTimeout(() => {
@@ -140,6 +85,25 @@
             } catch (error) {
                 console.error('Error fetching suggestions:', error);
             }
+
+            const percentage = parseFloat(document.getElementById('percentageValue').textContent);
+            drawGraph(percentage);
+        }
+
+        function drawGraph(percentage) {
+            const canvas = document.getElementById('percentageGraph');
+            const ctx = canvas.getContext('2d');
+
+            // Clear previous drawings
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw background bar
+            ctx.fillStyle = "#cccccc";
+            ctx.fillRect(50, 50, 300, 50);
+
+            // Draw percentage bar
+            ctx.fillStyle = "#0099ff";
+            ctx.fillRect(50, 50, 3 * percentage, 50);
         }
 
         setTimeout(() => {
