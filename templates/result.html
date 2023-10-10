@@ -125,7 +125,7 @@
     }
 
  // Scatter Plot Data
- const scatterData = {
+const scatterData = {
     datasets: [{
         label: 'Heart Disease Risk',
         data: ages.map((age, index) => ({ x: age, y: risks[index] })),
@@ -136,14 +136,13 @@
     }, 
     {
         label: 'Your Risk',
-        data: [{ x: ages[ages.length - 1] + 5, y: probability }],  // Plotting the user's risk a bit offset from the last age for clarity
+        data: [{ x: ages[ages.length - 1], y: probability }],
         borderColor: riskColor,
         backgroundColor: riskColor,
         pointRadius: 8,
         pointHoverRadius: 10,
     }]
 };
-
     
     const scatterConfig = {
         type: 'scatter',
@@ -176,8 +175,6 @@
         const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
         let suggestionsLoaded = false;  // Flag to track if suggestions have been loaded
-        let suggestionsDisplayed = false;  // Flag to track if suggestions have been displayed
-
     
         function drawGraph(percentage) {
             const canvas = document.getElementById('percentageGraph');
@@ -298,14 +295,6 @@
                 suggestionsLoaded = true;  // Mark suggestions as loaded
             }
         }, TIMER_SECONDS * 1000);
-
-        setTimeout(() => {
-    if (!suggestionsDisplayed) {  // Only fetch suggestions if they haven't been displayed
-        getSuggestionsWithQA('{{ risk_level }}');
-        suggestionsDisplayed = true;  // Mark suggestions as displayed
-    }
-}, TIMER_SECONDS * 1000);
-
 
     </script>    
     
