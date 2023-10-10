@@ -18,9 +18,9 @@
 
         .container {
             display: flex;
-            width: 90%;
+            width: 95%;
             margin-top: 20px;
-            height: 60vh;
+            height: 65vh;
         }
 
         .results {
@@ -30,37 +30,62 @@
         }
 
         .suggestions {
-            flex: 1;
+            flex: 1.5;
             padding: 20px;
             text-align: left;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         textarea {
             flex-grow: 1;
             padding: 10px;
             box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border: 2px solid #0099ff;
+            border-radius: 8px;
             background-color: #f8f8f8;
             overflow-y: scroll;
+            font-size: 15px;
+            transition: border 0.3s;
         }
 
-        h2, h3 {
+        textarea:focus {
+            border: 2px solid #66b2ff;
+            outline: none;
+        }
+
+        .timer {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #0099ff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 0 0 0 5px;
+            font-weight: bold;
+        }
+
+        h1, h2, h3 {
             margin-top: 0;
+        }
+
+        #percentageGraph {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
         }
     </style>
 </head>
 
 <body>
     <img src="https://www.cloudvative.com/img/logo-white.png" alt="Cloudvative Logo" width="220" />
-    
+    <h1>Heart Disease Risk Assessment Result</h1>
+
     <div class="container">
         <div class="results">
             <h3>Risk Level: {{ risk_level }}</h3>
-            <canvas id="percentageGraph" width="300" height="150" style="background-color: #f0f0f0;"></canvas>
             <p>Probability of Heart Disease: <span id="percentageValue">{{ heart_disease_percentage }}</span>%</p>
+            <canvas id="percentageGraph" width="300" height="150" style="background-color: #f0f0f0;"></canvas>
         </div>
         <div class="suggestions">
             <h2>Suggestions</h2>
@@ -161,10 +186,26 @@
         const risk_level = '{{ risk_level }}';
         const percentage = parseFloat('{{ heart_disease_percentage }}');
         drawGraph(percentage);
+
+        const TIMER_SECONDS = 2;  // 2-second delay
+        let countdown = TIMER_SECONDS;
+        let timerElement = document.createElement('div');
+        timerElement.className = 'timer';
+        timerElement.innerHTML = `Suggestions in ${countdown}s`;
+        document.querySelector('.suggestions').appendChild(timerElement);
+
+        let timer = setInterval(() => {
+            countdown--;
+            timerElement.innerHTML = `Suggestions in ${countdown}s`;
+            if (countdown <= 0) {
+                clearInterval(timer);
+                timerElement.remove();
+            }
+        }, 1000);
+
         setTimeout(() => {
             getSuggestions(risk_level);
-        }, 2000);
-
+        }, TIMER_SECONDS * 1000);
     </script>
 </body>
 
