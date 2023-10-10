@@ -90,7 +90,7 @@
     <div class="container">
         <div class="results">
             <h3>Risk Level: {{ risk_level }}</h3>
-            <p>Probability of Heart Disease: 39.66%</p>
+            <p>Probability of Heart Disease: <span id="percentageValue">{{ heart_disease_percentage }}</span>%</p>
             <!-- Scatter Plot Canvas -->
             <canvas id="scatterChart" width="500" height="300"></canvas>
         </div>
@@ -103,8 +103,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Sample data for the Scatter Plot (replace with your data)
-        const ages = [25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
-        const risks = [10, 12, 15, 20, 30, 40, 50, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+        const ages = [25, 30, 35, 40, 45, 50, 55, 60];
+        const risks = [10, 12, 15, 20, 30, 40, 50, 60];
 
         // Scatter Plot Data
         const scatterData = {
@@ -138,45 +138,11 @@
                             text: 'Risk'
                         }
                     }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const label = context.dataset.label || '';
-                                if (context.parsed.x === 60) {
-                                    return label + 'Probability of Heart Disease: 39.66%';
-                                }
-                                return label;
-                            }
-                        }
-                    }
                 }
             }
         };
 
-        const scatterChart = new Chart(document.getElementById('scatterChart'), scatterConfig);
-
-        // Add annotation for Probability of Heart Disease
-        scatterChart.options.plugins.annotation = {
-            annotations: {
-                heartDiseaseAnnotation: {
-                    type: 'line',
-                    mode: 'horizontal',
-                    scaleID: 'y',
-                    value: 39.66,
-                    borderColor: 'red',
-                    borderWidth: 2,
-                    label: {
-                        content: 'Probability of Heart Disease: 39.66%',
-                        enabled: true
-                    }
-                }
-            }
-        };
-
-        scatterChart.update();
-
+        new Chart(document.getElementById('scatterChart'), scatterConfig);
         const apiKey = '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';
         const apiUrl = 'https://api.openai.com/v1/chat/completions';
     
