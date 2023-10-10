@@ -8,24 +8,57 @@
             background-color: #011529;
             font-family: Arial, sans-serif;
             color: whitesmoke;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
 
         .container {
-            width: 70%;
-            margin: 0 auto;
-            text-align: center;
+            width: 90%;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .results {
+            width: 50%;
+            padding: 20px;
+            text-align: left;
+        }
+
+        .suggestions {
+            width: 50%;
+            padding: 20px;
+            text-align: left;
+        }
+
+        textarea {
+            width: 100%;
+            height: 250px;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f8f8f8;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <img src="https://www.cloudvative.com/img/logo-white.png" alt="Cloudvative Logo" width="220" />
-        <h1>Heart Disease Risk Assessment Result</h1>
-        <h2>Risk Level: {{ risk_level }}</h2>
-        <canvas id="percentageGraph" width="400" height="150" style="background-color: #f0f0f0;"></canvas>
-        <p>Probability of Heart Disease: <span id="percentageValue">{{ heart_disease_percentage }}</span>%</p>
-        <textarea id="suggestionsContent" readonly style="width:100%; height:200px;"></textarea>
+        <div class="results">
+            <img src="https://www.cloudvative.com/img/logo-white.png" alt="Cloudvative Logo" width="220" />
+            <h1>Heart Disease Risk Assessment Result</h1>
+            <h2>Risk Level: {{ risk_level }}</h2>
+            <canvas id="percentageGraph" width="300" height="150" style="background-color: #f0f0f0;"></canvas>
+            <p>Probability of Heart Disease: <span id="percentageValue">{{ heart_disease_percentage }}</span>%</p>
+        </div>
+        <div class="suggestions">
+            <h2>Suggestions</h2>
+            <textarea id="suggestionsContent" readonly></textarea>
+        </div>
     </div>
 
     <script>
@@ -94,16 +127,32 @@
             const canvas = document.getElementById('percentageGraph');
             const ctx = canvas.getContext('2d');
 
-            // Clear previous drawings
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Draw background bar
-            ctx.fillStyle = "#cccccc";
-            ctx.fillRect(50, 50, 300, 50);
+            // Draw line graph
+            ctx.beginPath();
+            ctx.moveTo(50, 150);
+            ctx.lineTo(50, 150 - (1.2 * percentage));
+            ctx.lineTo(250, 150 - (1.2 * percentage));
+            ctx.strokeStyle = "#0099ff";
+            ctx.lineWidth = 2;
+            ctx.stroke();
 
-            // Draw percentage bar
-            ctx.fillStyle = "#0099ff";
-            ctx.fillRect(50, 50, 3 * percentage, 50);
+            // Draw y-axis
+            ctx.beginPath();
+            ctx.moveTo(50, 150);
+            ctx.lineTo(50, 20);
+            ctx.strokeStyle = "#666";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Draw x-axis
+            ctx.beginPath();
+            ctx.moveTo(50, 150);
+            ctx.lineTo(250, 150);
+            ctx.strokeStyle = "#666";
+            ctx.lineWidth = 1;
+            ctx.stroke();
         }
 
         setTimeout(() => {
