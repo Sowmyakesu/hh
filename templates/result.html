@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,12 +28,10 @@
         <div id="suggestionsResult">
             <h2>Risk Level: {{ risk_level }}</h2>
             <p>Probability of Heart Disease: {{ heart_disease_percentage }}%</p>
+            <div id="suggestionsContent"></div> <!-- New div for suggestions content -->
         </div>
     </div>
-</body>
-</html>
 
-    
     <script>
         // Function to send a request to ChatGPT API and display suggestions
         async function getSuggestions(risk_level) {
@@ -81,8 +78,7 @@
                 formattedHTMLText = data.choices[0].message.content.replace(/\n/g,"<br>");
 
                 // Display the suggestions directly on the screen
-                document.getElementById('suggestionsResult').innerHTML = formattedHTMLText;
-                console.log(formattedHTMLText);
+                document.getElementById('suggestionsContent').innerHTML = formattedHTMLText;
             } catch (error) {
                 console.error('Error fetching suggestions:', error);
             }
