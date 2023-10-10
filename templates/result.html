@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Heart Disease Risk Assessment Result</title>
     <style>
@@ -71,19 +72,27 @@
             margin-top: 0;
         }
 
+        #percentageGraph {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            background-color: #f0f0f0;
+        }
+
         .logo {
             margin-bottom: 20px; /* Add space between logo and title */
         }
     </style>
 </head>
+
 <body>
     <img src="https://www.cloudvative.com/img/logo-white.png" alt="Cloudvative Logo" width="220" class="logo" />
     <h1>Heart Disease Risk Assessment Result</h1>
+
     <div class="container">
         <div class="results">
-            <h3>Risk Level: <span id="risk_level">Moderate</span></h3>
-            <p>Probability of Heart Disease: <span id="percentageValue" style="color: red;">30.5</span>%</p>
-            <canvas id="scatterChart" width="500" height="300"></canvas>
+            <h3>Risk Level: {{ risk_level }}</h3>
+            <p>Probability of Heart Disease: <span id="percentageValue">{{ heart_disease_percentage }}</span>%</p>
+            <canvas id="percentageGraph" width="500" height="300"></canvas>
         </div>
         <div class="suggestions">
             <h2>Suggestions</h2>
@@ -91,149 +100,128 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const probability = {{ heart_disease_percentage }};
+    const apiKey = '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';
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
-    const scatterData = {
-        datasets: [
-            {
-                label: 'Your Risk of Heart Disease',
-                data: [{ x: 100, y: probability }],  // Assuming x as 100 for example, you can adjust it based on your need
-                borderColor: 'red',
-                backgroundColor: 'red',
-                pointRadius: 8,
-                pointHoverRadius: 10,
-            }
-        ]
-    };
+    function drawGraph(percentage) {
+        const canvas = document.getElementById('percentageGraph');
+        const ctx = canvas.getContext('2d');
+        const internetTrendsPercentage = 65; // Hypothetical data
 
-    // Assuming you want to plot the data on a scatter chart
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const myScatterChart = new Chart(ctx, {
-        type: 'scatter',
-        data: scatterData,
-        options: {
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Age (or another relevant metric)'
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Probability (%)'
-                    }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw bar for internet trends
+        ctx.fillStyle = "#CCCCCC";
+        ctx.fillRect(60, 150 - (1.2 * internetTrendsPercentage), 40, 1.2 * internetTrendsPercentage);
+
+        // Draw bar for user's risk
+        ctx.fillStyle = "#0099ff";
+        ctx.fillRect(160, 150 - (1.2 * percentage), 40, 1.2 * percentage);
+    }
+
+    function typeText(sentences, index, container) {
+        if (index < sentences.length) {
+            let sentence = sentences[index].trim();
+            let charIndex = 0;
+            let typing = setInterval(() => {
+                if (charIndex < sentence.length) {
+                    container.value += sentence[charIndex];
+                    charIndex++;
+                } else {
+                    clearInterval(typing);
+                    container.value += '.\n';
+                    typeText(sentences, index + 1, container);
                 }
-            }
+            }, 50);
         }
-    });
+    }
 
-    
-        const ctx = document.getElementById('scatterChart').getContext('2d');
-        new Chart(ctx, scatterConfig);
+    async function getSuggestionsWithQA(risk_level) {
+        const questions = [
+            "What are the common symptoms of heart disease?",
+            "How can I prevent heart disease?",
+            "Are there any foods that are particularly good for heart health?",
+            "How does exercise benefit the heart?",
+            "What are the risks associated with heart surgeries?"
+        ];
 
-        const apiKey = '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';
-        const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    
-        function typeText(sentences, index, container) {
-            if (index < sentences.length) {
-                let sentence = sentences[index].trim();
-                let charIndex = 0;
-                let typing = setInterval(() => {
-                    if (charIndex < sentence.length) {
-                        container.value += sentence[charIndex];
-                        charIndex++;
-                    } else {
-                        clearInterval(typing);
-                        container.value += '.\n';
-                        typeText(sentences, index + 1, container);
-                    }
-                }, 50);
-            }
+        let promptBasedOnRisk = '';
+        if (risk_level === 'Low') {
+            promptBasedOnRisk = 'I have a low risk of heart disease. What can I do to maintain a healthy lifestyle?';
+        } else if (risk_level === 'Moderate') {
+            promptBasedOnRisk = 'I have a moderate risk of heart disease. What lifestyle changes should I consider?';
+        } else if (risk_level === 'High') {
+            promptBasedOnRisk = 'I have a high risk of heart disease. What urgent steps should I take for my health?';
         }
-    
-        async function getSuggestionsWithQA(risk_level) {
-            const questions = [
-                "What are the common symptoms of heart disease?",
-                "How can I prevent heart disease?",
-                "Are there any foods that are particularly good for heart health?",
-                "How does exercise benefit the heart?",
-                "What are the risks associated with heart surgeries?"
-            ];
-    
-            let promptBasedOnRisk = '';
-            if (risk_level === 'Low') {
-                promptBasedOnRisk = 'I have a low risk of heart disease. What can I do to maintain a healthy lifestyle?';
-            } else if (risk_level === 'Moderate') {
-                promptBasedOnRisk = 'I have a moderate risk of heart disease. What lifestyle changes should I consider?';
-            } else if (risk_level === 'High') {
-                promptBasedOnRisk = 'I have a high risk of heart disease. What urgent steps should I take for my health?';
-            }
-    
-            let allPrompts = [promptBasedOnRisk, ...questions];
-    
-            let combinedAnswers = '';
-            
-            for (let i = 0; i < allPrompts.length; i++) {
-                const requestData = {
-                    model: "gpt-4",
-                    "messages": [
-                        {
-                            "role": "user",
-                            "content": allPrompts[i]
-                        }
-                    ]
-                };
-    
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${apiKey}`,
-                        },
-                        body: JSON.stringify(requestData),
-                    });
-    
-                    const data = await response.json();
-                    const answer = data.choices[0].message.content;
-                    if (i === 0) {
-                        combinedAnswers += answer + '\n';
-                    } else {
-                        combinedAnswers += 'Q: ' + allPrompts[i] + '\nA: ' + answer + '\n';
+
+        let allPrompts = [promptBasedOnRisk, ...questions];
+
+        let combinedAnswers = '';
+        
+        for (let i = 0; i < allPrompts.length; i++) {
+            const requestData = {
+                model: "gpt-4",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": allPrompts[i]
                     }
-    
-                } catch (error) {
-                    console.error('Error fetching suggestions:', error);
+                ]
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`,
+                    },
+                    body: JSON.stringify(requestData),
+                });
+
+                const data = await response.json();
+                const answer = data.choices[0].message.content;
+                if (i === 0) {
+                    combinedAnswers += answer + '\n';
+                } else {
+                    combinedAnswers += 'Q: ' + allPrompts[i] + '\nA: ' + answer + '\n';
                 }
+
+            } catch (error) {
+                console.error('Error fetching suggestions:', error);
             }
-    
-            let container = document.getElementById('suggestionsContent');
-            typeText(combinedAnswers.split('\n'), 0, container);
         }
-    
-        const TIMER_SECONDS = 2;  // 2-second delay
-        let countdown = TIMER_SECONDS;
-        let timerElement = document.createElement('div');
-        timerElement.className = 'timer';
+
+        let container = document.getElementById('suggestionsContent');
+        typeText(combinedAnswers.split('\n'), 0, container);
+    }
+
+    const risk_level = 'Moderate'; // Replace with your risk level (ensure it's correctly set)
+    const percentage = 30.5; // Replace with your heart disease percentage (ensure it's correctly set)
+    drawGraph(percentage);
+
+    const TIMER_SECONDS = 2;  // 2-second delay
+    let countdown = TIMER_SECONDS;
+    let timerElement = document.createElement('div');
+    timerElement.className = 'timer';
+    timerElement.innerHTML = `Suggestions in ${countdown}s`;
+    document.querySelector('.suggestions').appendChild(timerElement);
+
+    let timer = setInterval(() => {
+        countdown--;
         timerElement.innerHTML = `Suggestions in ${countdown}s`;
-        document.querySelector('.suggestions').appendChild(timerElement);
-    
-        let timer = setInterval(() => {
-            countdown--;
-            timerElement.innerHTML = `Suggestions in ${countdown}s`;
-            if (countdown <= 0) {
-                clearInterval(timer);
-                timerElement.remove();
-                getSuggestionsWithQA(document.getElementById('risk_level').innerText);
-            }
-        }, 1000);
-    </script>    
+        if (countdown <= 0) {
+            clearInterval(timer);
+            timerElement.remove();
+        }
+    }, 1000);
+
+    setTimeout(() => {
+        getSuggestionsWithQA(risk_level);
+    }, TIMER_SECONDS * 1000);
+</script>
     
 </body>
+
 </html>
