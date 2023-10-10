@@ -103,72 +103,73 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Sample data for the Scatter Plot (replace with your data)
-    const ages = [10, 12, 15, 20, 30, 40, 50, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+        const ages = [10, 12, 15, 20, 30, 40, 50, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+        
+        // Modified risks array to represent lower risk for ages 10 to 30
+        const risks = [5, 6, 7, 10, 15, 30, 40, 50, 60, 65, 70, 75, 80, 85, 90, 95, 100];
     
-    // Modified risks array to represent lower risk for ages 10 to 30
-    const risks = [5, 6, 7, 10, 15, 30, 40, 50, 60, 65, 70, 75, 80, 85, 90, 95, 100];
-
-    // Get the probability value (replace with your actual value)
-    const probability = {{ heart_disease_percentage }}; 
+        // Get the probability value (replace with your actual value)
+        const probability = {{ heart_disease_percentage }}; 
+        
+        // Add the probability value to the risks array
+        risks.push(probability);
+        
+        // Determine color based on risk
+        let riskColor;
+        if (probability <= 33) {
+            riskColor = "green"; // Low Risk
+        } else if (probability <= 66) {
+            riskColor = "yellow"; // Medium Risk
+        } else {
+            riskColor = "red"; // High Risk
+        }
     
-    // Add the probability value to the risks array
-    risks.push(probability);
-    
-    // Determine color based on risk
-    let riskColor;
-    if (probability <= 33) {
-        riskColor = "green"; // Low Risk
-    } else if (probability <= 66) {
-        riskColor = "yellow"; // Medium Risk
-    } else {
-        riskColor = "red"; // High Risk
-    }
-
-    // Scatter Plot Data
-    const scatterData = {
-        labels: ages,
-        datasets: [{
-            label: 'Heart Disease Risk',
-            data: risks.slice(0, -1),
-            borderColor: 'blue',
-            backgroundColor: 'blue',
-            pointRadius: 5,
-            pointHoverRadius: 8,
-        }, 
-        {
-            label: 'Your Risk',
-            data: [probability],
-            borderColor: riskColor,
-            backgroundColor: riskColor,
-            pointRadius: 8,
-            pointHoverRadius: 10,
-        }]
-    };
-    
-    const scatterConfig = {
-        type: 'scatter',
-        data: scatterData,
-        options: {
-            scales: {
-                x: {
-                    type: 'linear',
-                    position: 'bottom',
-                    title: {
-                        display: true,
-                        text: 'Age'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Risk'
+        // Scatter Plot Data
+        const scatterData = {
+            labels: ages,
+            datasets: [{
+                label: 'Heart Disease Risk',
+                data: risks.slice(0, -1),
+                borderColor: 'blue',
+                backgroundColor: 'blue',
+                pointRadius: 5,
+                pointHoverRadius: 8,
+            }, 
+            {
+                label: 'Your Risk',
+                data: [probability],
+                borderColor: riskColor,
+                backgroundColor: riskColor,
+                pointRadius: 8,
+                pointHoverRadius: 10,
+            }]
+        };
+        
+        const scatterConfig = {
+            type: 'scatter',
+            data: scatterData,
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Age'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Risk'
+                        }
                     }
                 }
             }
-        }
-    };
-
-    new Chart(document.getElementById('scatterChart'), scatterConfig);
+        };
+    
+        new Chart(document.getElementById('scatterChart'), scatterConfig);
+    
     
 
         const apiKey = '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';
