@@ -171,6 +171,8 @@
 
         const apiKey = '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';
         const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+        let suggestionsLoaded = false;  // Flag to track if suggestions have been loaded
     
         function drawGraph(percentage) {
             const canvas = document.getElementById('percentageGraph');
@@ -286,8 +288,10 @@
         }, 1000);
 
         setTimeout(() => {
-            // Call the function to generate suggestions
-            getSuggestionsWithQA('{{ risk_level }}');
+            if (!suggestionsLoaded) {  // Check if suggestions are not loaded yet
+                getSuggestionsWithQA('{{ risk_level }}');
+                suggestionsLoaded = true;  // Mark suggestions as loaded
+            }
         }, TIMER_SECONDS * 1000);
 
     </script>    
