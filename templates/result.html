@@ -47,7 +47,7 @@
             overflow-y: scroll;
         }
 
-        h2 {
+        h2, h3 {
             margin-top: 0;
         }
     </style>
@@ -55,11 +55,12 @@
 
 <body>
     <img src="https://www.cloudvative.com/img/logo-white.png" alt="Cloudvative Logo" width="220" />
-    <h2>Risk Level: {{ risk_level }}</h2>
+    
     <div class="container">
         <div class="results">
-            <p>Probability of Heart Disease: <span id="percentageValue">{{ heart_disease_percentage }}</span>%</p>
+            <h3>Risk Level: {{ risk_level }}</h3>
             <canvas id="percentageGraph" width="300" height="150" style="background-color: #f0f0f0;"></canvas>
+            <p>Probability of Heart Disease: <span id="percentageValue">{{ heart_disease_percentage }}</span>%</p>
         </div>
         <div class="suggestions">
             <h2>Suggestions</h2>
@@ -68,6 +69,22 @@
     </div>
 
     <script>
+        function drawGraph(percentage) {
+            const canvas = document.getElementById('percentageGraph');
+            const ctx = canvas.getContext('2d');
+            const internetTrendsPercentage = 65; // Hypothetical data
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw bar for internet trends
+            ctx.fillStyle = "#CCCCCC";
+            ctx.fillRect(60, 150 - (1.2 * internetTrendsPercentage), 40, 1.2 * internetTrendsPercentage);
+
+            // Draw bar for user's risk
+            ctx.fillStyle = "#0099ff";
+            ctx.fillRect(160, 150 - (1.2 * percentage), 40, 1.2 * percentage);
+        }
+
         function typeText(sentences, index, container) {
             if (index < sentences.length) {
                 let sentence = sentences[index].trim();
@@ -87,7 +104,7 @@
                 container.value += "- World Health Organization (WHO): https://www.who.int/\n";
                 container.value += "- Mayo Clinic: https://www.mayoclinic.org/\n";
                 container.value += "- Centers for Disease Control and Prevention (CDC): https://www.cdc.gov/\n";
-                container.value += "\nFor fitness guidance, check out these websites:\n";
+                container.value += "\nFor fitness guidance, check out:\n";
                 container.value += "- MyFitnessPal: https://www.myfitnesspal.com/\n";
                 container.value += "- Bodybuilding.com: https://www.bodybuilding.com/\n";
                 container.value += "\nFor healthy recipes, explore:\n";
@@ -97,7 +114,7 @@
         }
 
         async function getSuggestions(risk_level) {
-            const apiKey = 'YOUR_API_KEY';  // Replace with your API key
+            const apiKey = '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';
             const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
             let prompt = '';
@@ -136,29 +153,18 @@
                 let container = document.getElementById('suggestionsContent');
                 typeText(sentences, 0, container);
 
-                const percentage = parseFloat(document.getElementById('percentageValue').textContent);
-                drawGraph(percentage);
             } catch (error) {
                 console.error('Error fetching suggestions:', error);
             }
         }
 
-        function drawGraph(percentage) {
-            const canvas = document.getElementById('percentageGraph');
-            const ctx = canvas.getContext('2d');
-            const internetTrendsPercentage = 65;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = "#CCCCCC";
-            ctx.fillRect(60, 150 - (1.2 * internetTrendsPercentage), 40, 1.2 * internetTrendsPercentage);
-
-            ctx.fillStyle = "#0099ff";
-            ctx.fillRect(160, 150 - (1.2 * percentage), 40, 1.2 * percentage);
-        }
-
         const risk_level = '{{ risk_level }}';
-        getSuggestions(risk_level);
+        const percentage = parseFloat('{{ heart_disease_percentage }}');
+        drawGraph(percentage);
+        setTimeout(() => {
+            getSuggestions(risk_level);
+        }, 2000);
+
     </script>
 </body>
 
