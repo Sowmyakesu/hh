@@ -79,6 +79,11 @@
 
                 formattedHTMLText = data.choices[0].message.content.replace(/\n/g,"<br>");
 
+                <div id="suggestionsResult">
+            <h2>Risk Level: {{ risk_level }}</h2>
+            <p>Probability of Heart Disease: {{ heart_disease_percentage }}%</p>
+                </div>
+
                 // Display the suggestions directly on the screen
                 document.getElementById('suggestionsResult').innerHTML = formattedHTMLText;
                 console.log(formattedHTMLText);
