@@ -76,11 +76,15 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
         }
+
+        .logo {
+            margin-bottom: 20px; /* Add space between logo and title */
+        }
     </style>
 </head>
 
 <body>
-    <img src="https://www.cloudvative.com/img/logo-white.png" alt="Cloudvative Logo" width="220" />
+    <img src="https://www.cloudvative.com/img/logo-white.png" alt="Cloudvative Logo" width="220" class="logo" />
     <h1>Heart Disease Risk Assessment Result</h1>
 
     <div class="container">
@@ -98,86 +102,55 @@
     <script>
         const apiKey = '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';
         const apiUrl = 'https://api.openai.com/v1/chat/completions';
-
+    
         function drawGraph(percentage) {
-            /* ... Existing drawGraph function ... */
+            const canvas = document.getElementById('percentageGraph');
+            const ctx = canvas.getContext('2d');
+            const internetTrendsPercentage = 65; // Hypothetical data
+    
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+            // Draw bar for internet trends
+            ctx.fillStyle = "#CCCCCC";
+            ctx.fillRect(60, 150 - (1.2 * internetTrendsPercentage), 40, 1.2 * internetTrendsPercentage);
+    
+            // Draw bar for user's risk
+            ctx.fillStyle = "#0099ff";
+            ctx.fillRect(160, 150 - (1.2 * percentage), 40, 1.2 * percentage);
         }
-
+    
         function typeText(sentences, index, container) {
-            /* ... Existing typeText function ... */
-        }
-
-        async function getSuggestionsWithQA(risk_level) {
-            const questions = [
-                "What are the common symptoms of heart disease?",
-                "How can I prevent heart disease?",
-                "Are there any foods that are particularly good for heart health?",
-                "How does exercise benefit the heart?",
-                "What are the risks associated with heart surgeries?"
-            ];
-
-            let promptBasedOnRisk = '';
-            if (risk_level === 'Low') {
-                promptBasedOnRisk = 'I have a low risk of heart disease. What can I do to maintain a healthy lifestyle?';
-            } else if (risk_level === 'Moderate') {
-                promptBasedOnRisk = 'I have a moderate risk of heart disease. What lifestyle changes should I consider?';
-            } else if (risk_level === 'High') {
-                promptBasedOnRisk = 'I have a high risk of heart disease. What urgent steps should I take for my health?';
-            }
-
-            let allPrompts = [promptBasedOnRisk, ...questions];
-
-            let combinedAnswers = '';
-            
-            for (let i = 0; i < allPrompts.length; i++) {
-                const requestData = {
-                    model: "gpt-4",
-                    "messages": [
-                        {
-                            "role": "user",
-                            "content": allPrompts[i]
-                        }
-                    ]
-                };
-
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${apiKey}`,
-                        },
-                        body: JSON.stringify(requestData),
-                    });
-
-                    const data = await response.json();
-                    const answer = data.choices[0].message.content;
-                    if (i === 0) {
-                        combinedAnswers += answer + '\n';
+            if (index < sentences.length) {
+                let sentence = sentences[index].trim();
+                let charIndex = 0;
+                let typing = setInterval(() => {
+                    if (charIndex < sentence.length) {
+                        container.value += sentence[charIndex];
+                        charIndex++;
                     } else {
-                        combinedAnswers += 'Q: ' + allPrompts[i] + '\nA: ' + answer + '\n';
+                        clearInterval(typing);
+                        container.value += '.\n';
+                        typeText(sentences, index + 1, container);
                     }
-
-                } catch (error) {
-                    console.error('Error fetching suggestions:', error);
-                }
+                }, 50);
             }
-
-            let container = document.getElementById('suggestionsContent');
-            typeText(combinedAnswers.split('\n'), 0, container);
         }
-
+    
+        async function getSuggestionsWithQA(risk_level) {
+            // ... Existing getSuggestionsWithQA function ...
+        }
+    
         const risk_level = '{{ risk_level }}';
         const percentage = parseFloat('{{ heart_disease_percentage }}');
         drawGraph(percentage);
-
+    
         const TIMER_SECONDS = 2;  // 2-second delay
         let countdown = TIMER_SECONDS;
         let timerElement = document.createElement('div');
         timerElement.className = 'timer';
         timerElement.innerHTML = `Suggestions in ${countdown}s`;
         document.querySelector('.suggestions').appendChild(timerElement);
-
+    
         let timer = setInterval(() => {
             countdown--;
             timerElement.innerHTML = `Suggestions in ${countdown}s`;
@@ -186,11 +159,12 @@
                 timerElement.remove();
             }
         }, 1000);
-
+    
         setTimeout(() => {
             getSuggestionsWithQA(risk_level);
         }, TIMER_SECONDS * 1000);
     </script>
+    
 </body>
 
 </html>
