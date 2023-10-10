@@ -123,7 +123,25 @@
         }
     
         // Scatter Plot Data
-
+        const scatterData = {
+            labels: ages,
+            datasets: [{
+                label: 'Heart Disease Risk',
+                data: risks.slice(0, -1),
+                borderColor: 'blue',
+                backgroundColor: 'blue',
+                pointRadius: 5,
+                pointHoverRadius: 8,
+            }, 
+            {
+                label: 'Your Risk',
+                data: [probability],
+                borderColor: riskColor,
+                backgroundColor: riskColor,
+                pointRadius: 8,
+                pointHoverRadius: 10,
+            }]
+        };
     
         const scatterConfig = {
             type: 'scatter',
