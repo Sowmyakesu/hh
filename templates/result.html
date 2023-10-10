@@ -93,23 +93,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const ages = [10, 12, 15, 20, 30, 40, 50, 60, 65, 70, 75, 80, 85, 90, 95, 100];
-        const risks = [10, 12, 15, 20, 30, 40, 50, 60, 65, 70, 75, 80, 85, 90, 95];
         const probability = {{ heart_disease_percentage }};
-
+    
         const scatterData = {
             datasets: [
                 {
-                    label: 'General Heart Disease Risk',
-                    data: ages.map((age, index) => ({ x: age, y: risks[index] })),
-                    borderColor: 'blue',
-                    backgroundColor: 'blue',
-                    pointRadius: 5,
-                    pointHoverRadius: 8,
-                }, 
-                {
-                    label: 'Your Risk',
-                    data: [{ x: ages[ages.length - 1], y: probability }],
+                    label: 'Your Risk of Heart Disease',
+                    data: [{ x: 100, y: probability }],  // Assuming x as 100 for example, you can adjust it based on your need
                     borderColor: 'red',
                     backgroundColor: 'red',
                     pointRadius: 8,
@@ -117,6 +107,30 @@
                 }
             ]
         };
+    
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myScatterChart = new Chart(ctx, {
+            type: 'scatter',
+            data: scatterData,
+            options: {
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Age (or another relevant metric)'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Probability (%)'
+                        }
+                    }
+                }
+            }
+        });
 
         const scatterConfig = {
             type: 'scatter',
@@ -143,7 +157,7 @@
 
         new Chart(document.getElementById('scatterChart'), scatterConfig);
 
-        const apiKey = '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';
+        const apiKey = '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';
         const apiUrl = 'https://api.openai.com/v1/chat/completions';
     
         function drawGraph(percentage) {
