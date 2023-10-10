@@ -11,25 +11,25 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
             height: 100vh;
         }
 
         .container {
-            width: 90%;
             display: flex;
-            flex-wrap: wrap;
+            width: 90%;
+            margin-top: 20px;
         }
 
         .results {
-            width: 50%;
+            flex: 1;
             padding: 20px;
             text-align: left;
         }
 
         .suggestions {
-            width: 50%;
+            flex: 1;
             padding: 20px;
             text-align: left;
         }
@@ -47,9 +47,9 @@
 </head>
 
 <body>
+    <img src="https://www.cloudvative.com/img/logo-white.png" alt="Cloudvative Logo" width="220" />
     <div class="container">
         <div class="results">
-            <img src="https://www.cloudvative.com/img/logo-white.png" alt="Cloudvative Logo" width="220" />
             <h1>Heart Disease Risk Assessment Result</h1>
             <h2>Risk Level: {{ risk_level }}</h2>
             <canvas id="percentageGraph" width="300" height="150" style="background-color: #f0f0f0;"></canvas>
