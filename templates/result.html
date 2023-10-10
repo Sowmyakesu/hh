@@ -87,19 +87,48 @@
 <body>
     <img src="https://www.cloudvative.com/img/logo-white.png" alt="Cloudvative Logo" width="220" class="logo" />
     <h1>Heart Disease Risk Assessment Result</h1>
+<script>
+    function drawScatterPlot(age, percentage) {
+        const canvas = document.getElementById('percentageGraph');
+        const ctx = canvas.getContext('2d');
 
-    <div class="container">
-        <div class="results">
-            <h3>Risk Level: {{ risk_level }}</h3>
-            <p>Probability of Heart Disease: <span id="percentageValue">{{ heart_disease_percentage }}</span>%</p>
-            <canvas id="percentageGraph" width="500" height="300"></canvas>
-        </div>
-        <div class="suggestions">
-            <h2>Suggestions</h2>
-            <textarea id="suggestionsContent" readonly></textarea>
-        </div>
-    </div>
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        // Define the age-to-color mapping
+        const colorMap = {
+            '20-30': '#FF5733',
+            '30-40': '#33FF57',
+            '40-50': '#5733FF',
+            '50-60': '#FF33A1',
+            '60-70': '#33FFA1',
+            '70-80': '#FF8C33',
+            '80-90': '#3382FF'
+        };
+
+        let ageRange = '';
+        if (age < 30) ageRange = '20-30';
+        else if (age < 40) ageRange = '30-40';
+        else if (age < 50) ageRange = '40-50';
+        else if (age < 60) ageRange = '50-60';
+        else if (age < 70) ageRange = '60-70';
+        else if (age < 80) ageRange = '70-80';
+        else ageRange = '80-90';
+
+        const pointColor = colorMap[ageRange];
+
+        // Plot the user's risk as a scatter point
+        ctx.fillStyle = pointColor;
+        ctx.beginPath();
+        ctx.arc(160, 150 - (1.2 * percentage), 5, 0, 2 * Math.PI);
+        ctx.fill();
+    }
+
+    // Mock data for testing purposes
+    const age = 45; // Replace with the actual age data
+    const risk_level = 'Moderate';
+    const percentage = 30.5;
+    drawScatterPlot(age, percentage);
+</script>
 <script>
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
