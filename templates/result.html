@@ -124,26 +124,25 @@
         riskColor = "red"; // High Risk
     }
 
-    // Scatter Plot Data
-    const scatterData = {
-        labels: ages,
-        datasets: [{
-            label: 'Heart Disease Risk',
-            data: risks.slice(0, -1),
-            borderColor: 'blue',
-            backgroundColor: 'blue',
-            pointRadius: 5,
-            pointHoverRadius: 8,
-        }, 
-        {
-            label: 'Your Risk',
-            data: [probability],
-            borderColor: riskColor,
-            backgroundColor: riskColor,
-            pointRadius: 8,
-            pointHoverRadius: 10,
-        }]
-    };
+ // Scatter Plot Data
+const scatterData = {
+    datasets: [{
+        label: 'Heart Disease Risk',
+        data: ages.map((age, index) => ({ x: age, y: risks[index] })),
+        borderColor: 'blue',
+        backgroundColor: 'blue',
+        pointRadius: 5,
+        pointHoverRadius: 8,
+    }, 
+    {
+        label: 'Your Risk',
+        data: [{ x: ages[ages.length - 1], y: probability }],
+        borderColor: riskColor,
+        backgroundColor: riskColor,
+        pointRadius: 8,
+        pointHoverRadius: 10,
+    }]
+};
     
     const scatterConfig = {
         type: 'scatter',
@@ -169,6 +168,7 @@
     };
 
     new Chart(document.getElementById('scatterChart'), scatterConfig);
+
     
 
         const apiKey = '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';
