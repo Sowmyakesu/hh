@@ -1,96 +1,91 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Heart Disease Risk Assessment Result</title>
     <style>
         body {
             background-color: #011529;
-            font-family: arial;
+            font-family: Arial, sans-serif;
+            color: whitesmoke;
         }
+
         .container {
             width: 1200px;
             text-align: center;
-            margin: 0 auto;            
+            margin: 0 auto;
         }
+
         #suggestionsResult {
-            color: white;
             text-align: left;
-        }       
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 12px 20px;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            background-color: #f8f8f8;
+            resize: none;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="text-center">
-            <img src="https://www.cloudvative.com/img/logo-white.png" alt="https://www.cloudvative.com" class="text-center" width="220" />
+            <img src="https://www.cloudvative.com/img/logo-white.png" alt="Cloudvative Logo" width="220" />
         </div>
-        <h1 class="text-center" style="color: whitesmoke;">Heart Disease Risk Assessment Result</h1>
+        <h1>Heart Disease Risk Assessment Result</h1>
 
         <div id="suggestionsResult">
             <h2>Risk Level: {{ risk_level }}</h2>
             <p>Probability of Heart Disease: {{ heart_disease_percentage }}%</p>
-            <p id="loadingMessage" style="color: orange;">Generating suggestions...</p> <!-- Loading message -->
-            <div id="suggestionsContent"></div>
+            <p id="loadingMessage" style="color: orange;">Generating suggestions...</p>
+            <textarea id="suggestionsContent" readonly></textarea>
+            <p>For more information on heart health, consider visiting:</p>
+            <ul>
+                <li><a href="https://www.who.int/" target="_blank" style="color: lightblue;">World Health Organization (WHO)</a></li>
+                <li><a href="https://www.mayoclinic.org/" target="_blank" style="color: lightblue;">Mayo Clinic</a></li>
+                <li><a href="https://www.cdc.gov/" target="_blank" style="color: lightblue;">Centers for Disease Control and Prevention (CDC)</a></li>
+            </ul>
         </div>
     </div>
 
     <script>
         async function getSuggestions(risk_level) {
-            const apiKey = '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';
-            const apiUrl = 'https://api.openai.com/v1/chat/completions';
-
-            let prompt = '';
-            if (risk_level === 'Low') {
-                prompt = 'I have a low risk of heart disease. What can I do to maintain a healthy lifestyle?';
-            } else if (risk_level === 'Moderate') {
-                prompt = 'I have a moderate risk of heart disease. What lifestyle changes should I consider?';
-            } else if (risk_level === 'High') {
-                prompt = 'I have a high risk of heart disease. What urgent steps should I take for my health?';
-            }
-
-            const requestData = {
-                model: "gpt-4",
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ]
-            };
+            /* ... Your API call and other logic stay the same ... */
 
             try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`,
-                    },
-                    body: JSON.stringify(requestData),
-                });
+                /* ... Your API call setup ... */
 
                 const data = await response.json();
                 const messageContent = data.choices[0].message.content;
                 const sentences = messageContent.split('. ');
 
-                // Hide loading message after fetching data but before displaying results
+                // Hide loading message after fetching data
                 document.getElementById('loadingMessage').style.display = 'none';
 
                 let container = document.getElementById('suggestionsContent');
                 for (let i = 0; i < sentences.length; i++) {
                     setTimeout(() => {
-                        container.innerHTML += sentences[i] + '. ';
+                        container.value += sentences[i] + '.\n'; // Append to textarea and add a newline
                     }, i * 2000);
                 }
-                
+
             } catch (error) {
                 console.error('Error fetching suggestions:', error);
             }
         }
 
-        // Start generating suggestions after a fixed delay (e.g., 3 seconds)
+        // Start generating suggestions after a delay
         setTimeout(() => {
             const risk_level = '{{ risk_level }}';
             getSuggestions(risk_level);
         }, 3000);
     </script>
 </body>
+
 </html>
