@@ -137,11 +137,67 @@
         }
     
         async function getSuggestionsWithQA(risk_level) {
-            // ... Existing getSuggestionsWithQA function ...
+            const questions = [
+                "What are the common symptoms of heart disease?",
+                "How can I prevent heart disease?",
+                "Are there any foods that are particularly good for heart health?",
+                "How does exercise benefit the heart?",
+                "What are the risks associated with heart surgeries?"
+            ];
+    
+            let promptBasedOnRisk = '';
+            if (risk_level === 'Low') {
+                promptBasedOnRisk = 'I have a low risk of heart disease. What can I do to maintain a healthy lifestyle?';
+            } else if (risk_level === 'Moderate') {
+                promptBasedOnRisk = 'I have a moderate risk of heart disease. What lifestyle changes should I consider?';
+            } else if (risk_level === 'High') {
+                promptBasedOnRisk = 'I have a high risk of heart disease. What urgent steps should I take for my health?';
+            }
+    
+            let allPrompts = [promptBasedOnRisk, ...questions];
+    
+            let combinedAnswers = '';
+            
+            for (let i = 0; i < allPrompts.length; i++) {
+                const requestData = {
+                    model: "gpt-4",
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": allPrompts[i]
+                        }
+                    ]
+                };
+    
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${apiKey}`,
+                        },
+                        body: JSON.stringify(requestData),
+                    });
+    
+                    const data = await response.json();
+                    const answer = data.choices[0].message.content;
+                    if (i === 0) {
+                        combinedAnswers += answer + '\n';
+                    } else {
+                        combinedAnswers += 'Q: ' + allPrompts[i] + '\nA: ' + answer + '\n';
+                    }
+    
+                } catch (error) {
+                    console.error('Error fetching suggestions:', error);
+                }
+            }
+    
+            let container = document.getElementById('suggestionsContent');
+            typeText(combinedAnswers.split('\n'), 0, container);
         }
     
-        const risk_level = '{{ risk_level }}';
-        const percentage = parseFloat('{{ heart_disease_percentage }}');
+        const risk_level = 'Moderate'; // Replace with your risk level (ensure it's correctly set)
+        const percentage = 30.5; // Replace with your heart disease percentage (ensure it's correctly set)
         drawGraph(percentage);
     
         const TIMER_SECONDS = 2;  // 2-second delay
@@ -163,7 +219,7 @@
         setTimeout(() => {
             getSuggestionsWithQA(risk_level);
         }, TIMER_SECONDS * 1000);
-    </script>
+    </script>    
     
 </body>
 
