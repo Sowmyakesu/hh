@@ -20,7 +20,7 @@
             display: flex;
             width: 95%;
             margin-top: 20px;
-            height: 65vh;
+            height: 75vh;
         }
 
         .results {
@@ -94,93 +94,75 @@
     </div>
 
     <script>
+        const apiKey = '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';
+        const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
         function drawGraph(percentage) {
-            const canvas = document.getElementById('percentageGraph');
-            const ctx = canvas.getContext('2d');
-            const internetTrendsPercentage = 65; // Hypothetical data
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Draw bar for internet trends
-            ctx.fillStyle = "#CCCCCC";
-            ctx.fillRect(60, 150 - (1.2 * internetTrendsPercentage), 40, 1.2 * internetTrendsPercentage);
-
-            // Draw bar for user's risk
-            ctx.fillStyle = "#0099ff";
-            ctx.fillRect(160, 150 - (1.2 * percentage), 40, 1.2 * percentage);
+            /* ... Existing drawGraph function ... */
         }
 
         function typeText(sentences, index, container) {
-            if (index < sentences.length) {
-                let sentence = sentences[index].trim();
-                let charIndex = 0;
-                let typing = setInterval(() => {
-                    if (charIndex < sentence.length) {
-                        container.value += sentence[charIndex];
-                        charIndex++;
-                    } else {
-                        clearInterval(typing);
-                        container.value += '.\n';
-                        typeText(sentences, index + 1, container);
-                    }
-                }, 50);
-            } else {
-                container.value += "\nFor more information on heart health, consider visiting these reputable sources:\n";
-                container.value += "- World Health Organization (WHO): https://www.who.int/\n";
-                container.value += "- Mayo Clinic: https://www.mayoclinic.org/\n";
-                container.value += "- Centers for Disease Control and Prevention (CDC): https://www.cdc.gov/\n";
-                container.value += "\nFor fitness guidance, check out:\n";
-                container.value += "- MyFitnessPal: https://www.myfitnesspal.com/\n";
-                container.value += "- Bodybuilding.com: https://www.bodybuilding.com/\n";
-                container.value += "\nFor healthy recipes, explore:\n";
-                container.value += "- Allrecipes' Healthy section: https://www.allrecipes.com/recipes/84/healthy-recipes/\n";
-                container.value += "- EatingWell: https://www.eatingwell.com/\n";
-            }
+            /* ... Existing typeText function ... */
         }
 
-        async function getSuggestions(risk_level) {
-            const apiKey = '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';
-            const apiUrl = 'https://api.openai.com/v1/chat/completions';
+        async function getSuggestionsWithQA(risk_level) {
+            const questions = [
+                "What are the common symptoms of heart disease?",
+                "How can I prevent heart disease?",
+                "Are there any foods that are particularly good for heart health?",
+                "How does exercise benefit the heart?",
+                "What are the risks associated with heart surgeries?"
+            ];
 
-            let prompt = '';
+            let promptBasedOnRisk = '';
             if (risk_level === 'Low') {
-                prompt = 'I have a low risk of heart disease. What can I do to maintain a healthy lifestyle?';
+                promptBasedOnRisk = 'I have a low risk of heart disease. What can I do to maintain a healthy lifestyle?';
             } else if (risk_level === 'Moderate') {
-                prompt = 'I have a moderate risk of heart disease. What lifestyle changes should I consider?';
+                promptBasedOnRisk = 'I have a moderate risk of heart disease. What lifestyle changes should I consider?';
             } else if (risk_level === 'High') {
-                prompt = 'I have a high risk of heart disease. What urgent steps should I take for my health?';
+                promptBasedOnRisk = 'I have a high risk of heart disease. What urgent steps should I take for my health?';
             }
 
-            const requestData = {
-                model: "gpt-4",
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": prompt
+            let allPrompts = [promptBasedOnRisk, ...questions];
+
+            let combinedAnswers = '';
+            
+            for (let i = 0; i < allPrompts.length; i++) {
+                const requestData = {
+                    model: "gpt-4",
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": allPrompts[i]
+                        }
+                    ]
+                };
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${apiKey}`,
+                        },
+                        body: JSON.stringify(requestData),
+                    });
+
+                    const data = await response.json();
+                    const answer = data.choices[0].message.content;
+                    if (i === 0) {
+                        combinedAnswers += answer + '\n';
+                    } else {
+                        combinedAnswers += 'Q: ' + allPrompts[i] + '\nA: ' + answer + '\n';
                     }
-                ]
-            };
 
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`,
-                    },
-                    body: JSON.stringify(requestData),
-                });
-
-                const data = await response.json();
-                const messageContent = data.choices[0].message.content;
-                const sentences = messageContent.split('. ');
-
-                let container = document.getElementById('suggestionsContent');
-                typeText(sentences, 0, container);
-
-            } catch (error) {
-                console.error('Error fetching suggestions:', error);
+                } catch (error) {
+                    console.error('Error fetching suggestions:', error);
+                }
             }
+
+            let container = document.getElementById('suggestionsContent');
+            typeText(combinedAnswers.split('\n'), 0, container);
         }
 
         const risk_level = '{{ risk_level }}';
@@ -204,7 +186,7 @@
         }, 1000);
 
         setTimeout(() => {
-            getSuggestions(risk_level);
+            getSuggestionsWithQA(risk_level);
         }, TIMER_SECONDS * 1000);
     </script>
 </body>
