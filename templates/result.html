@@ -71,18 +71,27 @@
             margin-top: 0;
         }
 
+        #percentageGraph {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            background-color: #f0f0f0;
+        }
+
         .logo {
             margin-bottom: 20px; /* Add space between logo and title */
         }
     </style>
 </head>
+
 <body>
     <img src="https://www.cloudvative.com/img/logo-white.png" alt="Cloudvative Logo" width="220" class="logo" />
     <h1>Heart Disease Risk Assessment Result</h1>
+
     <div class="container">
         <div class="results">
-            <h3>Risk Level: <span id="risk_level">Moderate</span></h3>
-            <p>Probability of Heart Disease: <span id="percentageValue" style="color: red;">30.5</span>%</p>
+            <h3>Risk Level: {{ risk_level }}</h3>
+            <p>Probability of Heart Disease: <span id="percentageValue" style="color: red;">{{ heart_disease_percentage }}</span>%</p>
+            <!-- Scatter Plot Canvas -->
             <canvas id="scatterChart" width="500" height="300"></canvas>
         </div>
         <div class="suggestions">
@@ -93,21 +102,29 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const probability = 30.5; // Replace with your heart disease percentage (ensure it's correctly set)
-        
+        // Sample data for the Scatter Plot (replace with your data)
+        const ages = [10, 12, 15, 20, 30, 40, 50, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+        const risks = [10, 12, 15, 20, 30, 40, 50, 60, 65, 70, 75, 80, 85, 90, 95];
+
+        // Get the probability value (replace with your actual value)
+        const probability = {{ heart_disease_percentage }}; // Replace with your actual probability value
+
+        // Add the probability value to the risks array
+        risks.push(probability);
+
+        // Scatter Plot Data
         const scatterData = {
-            datasets: [
-                {
-                    label: 'Your Risk of Heart Disease',
-                    data: [{ x: 100, y: probability }],
-                    borderColor: 'red',
-                    backgroundColor: 'red',
-                    pointRadius: 8,
-                    pointHoverRadius: 10,
-                }
-            ]
+            labels: ages,
+            datasets: [{
+                label: 'Heart Disease Risk',
+                data: risks,
+                borderColor: 'blue',
+                backgroundColor: 'blue',
+                pointRadius: 5,
+                pointHoverRadius: 8,
+            }]
         };
-        
+
         const scatterConfig = {
             type: 'scatter',
             data: scatterData,
@@ -118,24 +135,39 @@
                         position: 'bottom',
                         title: {
                             display: true,
-                            text: 'Age' // Replace with the appropriate label for the x-axis
+                            text: 'Age'
                         }
                     },
                     y: {
                         title: {
                             display: true,
-                            text: 'Risk (%)' // Replace with the appropriate label for the y-axis
+                            text: 'Risk'
                         }
                     }
                 }
             }
         };
-    
-        const ctx = document.getElementById('scatterChart').getContext('2d');
-        new Chart(ctx, scatterConfig);
 
-        const apiKey = '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';
+        new Chart(document.getElementById('scatterChart'), scatterConfig);
+
+        const apiKey = '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';
         const apiUrl = 'https://api.openai.com/v1/chat/completions';
+    
+        function drawGraph(percentage) {
+            const canvas = document.getElementById('percentageGraph');
+            const ctx = canvas.getContext('2d');
+            const internetTrendsPercentage = 65; // Hypothetical data
+    
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+            // Draw bar for internet trends
+            ctx.fillStyle = "#CCCCCC";
+            ctx.fillRect(60, 150 - (1.2 * internetTrendsPercentage), 40, 1.2 * internetTrendsPercentage);
+    
+            // Draw bar for user's risk
+            ctx.fillStyle = "#0099ff";
+            ctx.fillRect(160, 150 - (1.2 * percentage), 40, 1.2 * percentage);
+        }
     
         function typeText(sentences, index, container) {
             if (index < sentences.length) {
@@ -214,6 +246,10 @@
             typeText(combinedAnswers.split('\n'), 0, container);
         }
     
+        const risk_level = 'Moderate'; // Replace with your risk level (ensure it's correctly set)
+        const percentage = 30.5; // Replace with your heart disease percentage (ensure it's correctly set)
+        drawGraph(percentage);
+    
         const TIMER_SECONDS = 2;  // 2-second delay
         let countdown = TIMER_SECONDS;
         let timerElement = document.createElement('div');
@@ -227,10 +263,14 @@
             if (countdown <= 0) {
                 clearInterval(timer);
                 timerElement.remove();
-                getSuggestionsWithQA(document.getElementById('risk_level').innerText);
             }
         }, 1000);
+    
+        setTimeout(() => {
+            getSuggestionsWithQA(risk_level);
+        }, TIMER_SECONDS * 1000);
     </script>    
     
 </body>
+
 </html>
