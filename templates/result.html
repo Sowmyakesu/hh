@@ -123,6 +123,9 @@
         } else {
             riskColor = "red"; // High Risk
         }
+
+        // Update the color of the displayed probability value
+        document.getElementById("percentageValue").style.color = riskColor;
     
         // Scatter Plot Data
         const scatterData = {
