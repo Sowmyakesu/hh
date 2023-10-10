@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Heart Disease Risk Assessment Result</title>
     <style>
@@ -92,7 +91,8 @@
         <div class="results">
             <h3>Risk Level: {{ risk_level }}</h3>
             <p>Probability of Heart Disease: <span id="percentageValue">{{ heart_disease_percentage }}</span>%</p>
-            <canvas id="percentageGraph" width="500" height="300"></canvas>
+            <!-- Scatter Plot Canvas -->
+            <canvas id="scatterChart" width="500" height="300"></canvas>
         </div>
         <div class="suggestions">
             <h2>Suggestions</h2>
@@ -100,7 +100,49 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        // Sample data for the Scatter Plot (replace with your data)
+        const ages = [25, 30, 35, 40, 45, 50, 55, 60];
+        const risks = [10, 12, 15, 20, 30, 40, 50, 60];
+
+        // Scatter Plot Data
+        const scatterData = {
+            labels: ages,
+            datasets: [{
+                label: 'Heart Disease Risk',
+                data: risks,
+                borderColor: 'blue',
+                backgroundColor: 'blue',
+                pointRadius: 5,
+                pointHoverRadius: 8,
+            }]
+        };
+
+        const scatterConfig = {
+            type: 'scatter',
+            data: scatterData,
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Age'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Risk'
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(document.getElementById('scatterChart'), scatterConfig);
         const apiKey = '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';
         const apiUrl = 'https://api.openai.com/v1/chat/completions';
     
