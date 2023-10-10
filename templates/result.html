@@ -164,7 +164,7 @@
         async function getSuggestionsWithQA(risk_level) {
             const questions = [
                 "What are the common symptoms of heart disease?",
-                // "How can I prevent heart disease?",
+                "How can I prevent heart disease?",
                 // "Are there any foods that are particularly good for heart health?",
                 // "How does exercise benefit the heart?",
                 // "What are the risks associated with heart surgeries?"
@@ -180,45 +180,49 @@
             }
 
             let allPrompts = [promptBasedOnRisk, ...questions];
-
-            let combinedAnswers = '';
             
-            for (let i = 0; i < allPrompts.length; i++) {
+            const requestPromises = allPrompts.map(prompt => {
                 const requestData = {
                     model: "gpt-4",
                     "messages": [
                         {
                             "role": "user",
-                            "content": allPrompts[i]
+                            "content": prompt
                         }
                     ]
                 };
 
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${apiKey}`,
-                        },
-                        body: JSON.stringify(requestData),
-                    });
+                return fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`,
+                    },
+                    body: JSON.stringify(requestData),
+                });
+            });
 
-                    const data = await response.json();
-                    const answer = data.choices[0].message.content;
+            try {
+                const responses = await Promise.all(requestPromises);
+                const dataPromises = responses.map(response => response.json());
+                const data = await Promise.all(dataPromises);
+
+                let combinedAnswers = '';
+                for (let i = 0; i < data.length; i++) {
+                    const answer = data[i].choices[0].message.content;
                     if (i === 0) {
                         combinedAnswers += answer + '\n';
                     } else {
                         combinedAnswers += 'Q: ' + allPrompts[i] + '\nA: ' + answer + '\n';
                     }
-
-                } catch (error) {
-                    console.error('Error fetching suggestions:', error);
                 }
-            }
 
-            let container = document.getElementById('suggestionsContent');
-            typeText(combinedAnswers.split('\n'), 0, container);
+                let container = document.getElementById('suggestionsContent');
+                typeText(combinedAnswers.split('\n'), 0, container);
+
+            } catch (error) {
+                console.error('Error fetching suggestions:', error);
+            }
         }
 
         const TIMER_SECONDS = 2;
@@ -238,8 +242,10 @@
         }, 1000);
 
         setTimeout(() => {
-            getSuggestionsWithQA(risk_level);
+            // Call the function to generate suggestions
+            getSuggestionsWithQA('{{ risk_level }}');
         }, TIMER_SECONDS * 1000);
+
     </script>
     
 </body>
