@@ -124,10 +124,8 @@
             riskColor = "red"; // High Risk
         }
 
-        // Change heart color based on risk
-        const heartLogo = document.getElementById('heartLogo');
-        heartLogo.style.filter = `drop-shadow(0 0 0 ${riskColor})`;
-
+        // Update the color of the displayed probability value
+        document.getElementById("percentageValue").style.color = riskColor;
     
         // Scatter Plot Data
         const scatterData = {
