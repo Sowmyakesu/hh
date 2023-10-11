@@ -86,6 +86,7 @@
 <body>
     <img src="https://www.cloudvative.com/img/logo-white.png" alt="Cloudvative Logo" width="220" class="logo" />
     <h1>Heart Disease Risk Assessment Result</h1>
+    <img id="heartLogo" src="path_to_heart.svg" alt="Heart Logo" width="220" class="logo" />
 
     <div class="container">
         <div class="results">
@@ -124,8 +125,10 @@
             riskColor = "red"; // High Risk
         }
 
-        // Update the color of the displayed probability value
-        document.getElementById("percentageValue").style.color = riskColor;
+        // Change heart color based on risk
+        const heartLogo = document.getElementById('heartLogo');
+        heartLogo.style.filter = `drop-shadow(0 0 0 ${riskColor})`;
+
     
         // Scatter Plot Data
         const scatterData = {
