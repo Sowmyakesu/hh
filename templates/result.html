@@ -96,7 +96,13 @@
         </div>
         <div class="suggestions">
             <h2>Suggestions</h2>
-            <textarea id="suggestionsContent" readonly></textarea>
+            <div class="ai-container">
+                <video id="aiVideo" width="100" height="150" muted loop>
+                    <source src="templates/kira-doctor-1080.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <textarea id="suggestionsContent" readonly></textarea>
+            </div>
         </div>
     </div>
 
@@ -171,7 +177,26 @@
             }
         };
     
-        new Chart(document.getElementById('scatterChart'), scatterConfig);
+        const ctx = document.getElementById('scatterChart').getContext('2d');
+        new Chart(ctx, scatterConfig);
+
+        function readContent() {
+            let content = document.getElementById('suggestionsContent').value;
+            let aiVideo = document.getElementById('aiVideo');
+
+            if (window.SpeechSynthesisUtterance && window.speechSynthesis) {
+                let msg = new SpeechSynthesisUtterance(content);
+                msg.onstart = function(event) {
+                    aiVideo.play();
+                };
+                msg.onend = function(event) {
+                    aiVideo.pause();
+                };
+                speechSynthesis.speak(msg);
+            } else {
+                alert('Your browser does not support speech synthesis. Consider using Google Chrome.');
+            }
+        }
     
     
 
