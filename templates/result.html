@@ -39,7 +39,7 @@
 
         textarea {
             flex-grow: 1;
-            width: 100%;
+            width: 70%;
             height: 400px;
             padding: 10px;
             box-sizing: border-box;
@@ -80,6 +80,28 @@
         .logo {
             margin-bottom: 20px; /* Add space between logo and title */
         }
+		.ai-container {
+			display: flex;
+		}
+		.img-container {
+			width: 170px;
+			height: 150px;
+			border-radius: 50%;
+			overflow: hidden;			
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-top: 50px;
+			margin-right: 20px;
+		}
+		.img-container img {
+			width: auto;
+			height: 150px;
+			margin-left: 10px;
+		}
+		.suggestions-container {
+			width: 95%;
+		}
     </style>
 </head>
 
@@ -95,10 +117,12 @@
             <canvas id="scatterChart" width="500" height="300"></canvas>
         </div>
         <div class="suggestions">
-            <h2>Suggestions</h2>
             <div class="ai-container">
-                <img src="https://pixabay.com/illustrations/ai-generated-woman-doctor-nurse-8125642/" id="aiImage" alt="AI Image" width="100" height="150">
-                <textarea id="suggestionsContent" readonly></textarea>
+                <div class="img-container"><img src="woman-doctor.gif" id="aiImage" alt="AI Image"></div>
+				<div class="suggestions-container">
+					<h2>Suggestions</h2>
+					<textarea id="suggestionsContent" readonly></textarea>
+				</div>
             </div>
         </div>
     </div>
